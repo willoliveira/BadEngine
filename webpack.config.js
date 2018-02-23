@@ -1,8 +1,14 @@
 const path = require('path');
+const webpack = require('webpack');
 
 module.exports = {
 	entry: './src/index.ts',
-	devtool: 'inline-source-map',
+	devtool: 'cheap-eval-source-map',
+	devServer: {
+		contentBase: path.join(__dirname, "dist"),
+		port: 9000,
+		hot: true
+	},
 	module: {
 		rules: [
 			{
@@ -18,5 +24,8 @@ module.exports = {
 	output: {
 		filename: 'bundle.js',
 		path: path.resolve(__dirname, 'dist')
-	}
+	},
+	plugins: [
+		new webpack.HotModuleReplacementPlugin()
+	]
 };
