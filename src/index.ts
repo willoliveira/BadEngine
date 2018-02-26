@@ -6,7 +6,7 @@ const ctx = canvas.getContext("2d");
 
 let image = new Image();
 let imageBlank = new Image();
-imageBlank.src = "/assets/blank.png"
+imageBlank.src = "assets/blank.png"
 
 
 let tileSize = 64;
@@ -75,7 +75,7 @@ function init() {
 	canvas.width = tileSize * cameraSizeWidth;
 	canvas.height = tileSize * cameraSizeHeight;
 
-	image.src = "/assets/tiles.png";
+	image.src = "assets/tiles.png";
 	image.addEventListener("load", () => {
 		setInterval(GameLoop, 1000 / Config.FPS);
 	});
