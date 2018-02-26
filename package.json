@@ -11,6 +11,8 @@
 	"license": "ISC",
 	"dependencies": {},
 	"devDependencies": {
+		"gulp": "^3.9.1",
+		"gulp-livereload": "^3.8.1",
 		"ts-loader": "^3.5.0",
 		"typescript": "^2.7.2",
 		"webpack": "^3.11.0",
