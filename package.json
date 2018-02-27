@@ -11,9 +11,12 @@
 	"license": "ISC",
 	"dependencies": {},
 	"devDependencies": {
+		"gulp": "^3.9.1",
+		"gutil": "^1.6.4",
 		"ts-loader": "^3.5.0",
 		"typescript": "^2.7.2",
 		"webpack": "^3.11.0",
-		"webpack-dev-server": "^2.11.1"
+		"webpack-dev-server": "^2.11.1",
+		"webpack-stream": "^4.0.2"
 	}
 }

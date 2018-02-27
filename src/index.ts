@@ -166,6 +166,7 @@ function render() {
 	}
 }
 
+console.log("teste")
 
 function onKeyPress(evt: any) {
 	let dir: MovementDirection = { x: Direction.Idle, y: Direction.Idle };
