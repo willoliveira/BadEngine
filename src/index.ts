@@ -1,7 +1,8 @@
 import { Player } from "./Character/Player";
-import { MovementDirection, Direction, Position } from "./_base/position.interface";
+import { MovementDirection, Direction, Position } from "./_base/interface/position.interface";
 import { Camera } from "./Camera/Camera";
 import { Trasnform } from "./_base/Transform";
+import { GameComponent } from "./_base/GameComponent";
 
 const canvas:any = document.getElementById("stage");
 const ctx = canvas.getContext("2d");
@@ -68,8 +69,12 @@ let Config = {
 	FPS: 60
 }
 
+let GameComponentsHierarchy: Array<GameComponent> = [];
+
 let player: Player = new Player(new Trasnform(1, 1, 1, 1), 1);
-let camera: Camera = new Camera(new Trasnform(1, 1, 12, 12), player);
+let camera: Camera = new Camera(new Trasnform(1, 1, 13, 13), player);
+
+GameComponentsHierarchy.push(camera);
 
 function init() {
 	canvas.width = tileSize * camera.transform.width;
@@ -85,8 +90,17 @@ function init() {
 	});
 }
 
+let components: Array<GameComponent> = GameComponentsHierarchy.reduce((before, current:GameComponent) => {
+	before.push(current);
+	if (current.componests && current.componests.length) before = before.concat(current.componests);
+	return before;
+}, []);
+
 function GameLoop() {
-	camera.Follow();
+
+	components.forEach((c:GameComponent) => { c.Update(); });
+
+	// colocar esse TileMap nessa mesma estrutura de componente
 	render();
 }
 

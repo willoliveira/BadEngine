@@ -1,7 +1,8 @@
 import { Player } from "../Character/Player";
 import { Trasnform } from "../_base/Transform";
+import { GameComponent } from "../_base/GameComponent";
 
-export class Camera {
+export class Camera extends GameComponent {
 
 	public center: boolean = true;
 
@@ -9,15 +10,21 @@ export class Camera {
 		public transform: Trasnform,
 		public target?: Player,
 		public limitBorder?: { width: number, height: number } // TODO: Super provisório
-	) { }
+	) {
+		super();
+	}
+
+	Update() {
+		this.Follow();
+	}
 
 
 	Follow() {
 		if (!this.target) return;
 
 		if (this.center) {
-			this.transform.x = this.target.trasnform.x - (this.transform.width / 2);
-			this.transform.y = this.target.trasnform.y - (this.transform.height / 2);
+			this.transform.x = this.target.trasnform.x - Math.floor(this.transform.width / 2);
+			this.transform.y = this.target.trasnform.y - Math.floor(this.transform.height / 2);
 		}
 
 		if (this.limitBorder) {
