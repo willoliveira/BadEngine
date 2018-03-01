@@ -1,6 +1,7 @@
-import { Player } from "./Player/Player";
+import { Player } from "./Character/Player";
 import { MovementDirection, Direction, Position } from "./_base/position.interface";
 import { Camera } from "./Camera/Camera";
+import { Trasnform } from "./_base/Transform";
 
 const canvas:any = document.getElementById("stage");
 const ctx = canvas.getContext("2d");
@@ -67,15 +68,12 @@ let Config = {
 	FPS: 60
 }
 
-let player: Player = new Player({ x: 1, y: 1 }, 1);
-let camera: Camera = new Camera(1, 1, 12, 12, player);
-
-let offsetX: number = Math.floor(camera.width/2) - camera.x;
-let offsetY: number = Math.floor(camera.height/2) - camera.y;
+let player: Player = new Player(new Trasnform(1, 1, 1, 1), 1);
+let camera: Camera = new Camera(new Trasnform(1, 1, 12, 12), player);
 
 function init() {
-	canvas.width = tileSize * camera.width;
-	canvas.height = tileSize * camera.height;
+	canvas.width = tileSize * camera.transform.width;
+	canvas.height = tileSize * camera.transform.height;
 
 	image.src = "/assets/tiles.png";
 	image.addEventListener("load", () => {
@@ -84,7 +82,7 @@ function init() {
 
 	document.getElementById("limitBorder").addEventListener("change", (event:any) => {
 		camera.limitBorder = event.target.checked ? { width: mapLayers[0][0].length, height: mapLayers[0].length } : null;
-	})
+	});
 }
 
 function GameLoop() {
@@ -94,19 +92,19 @@ function GameLoop() {
 
 function onMoveTo(pos: MovementDirection) {
 	let positionRequest: Position = {
-		x: player.position.x + pos.x,
-		y: player.position.y + pos.y
+		x: player.trasnform.x + pos.x,
+		y: player.trasnform.y + pos.y
 	};
 
 	if (!hasCollision(positionRequest)) {
-		player.position.x += pos.x;
-		player.position.y += pos.y;
+		player.trasnform.x += pos.x;
+		player.trasnform.y += pos.y;
 	}
 }
 
 function hasCollision(position: Position) {
 	// Vai sair do mapa
-	if (position.y < 0 || position.y >= mapCollisions.length  ||
+	if (position.y < 0 || position.y >= mapCollisions.length ||
 		position.x < 0 || position.x >= mapCollisions[0].length) {
 		return true;
 	}
@@ -124,11 +122,11 @@ function render() {
 
 	for (let layer = 0; layer < mapLayers.length; layer++) {
 
-		for (let row = 0; row < camera.height; row++) {
-			for (let col = 0; col < camera.width; col++) {
+		for (let row = 0; row < camera.transform.height; row++) {
+			for (let col = 0; col < camera.transform.width; col++) {
 
-				let posY = camera.y + row;
-				let posX = camera.x + col;
+				let posY = camera.transform.y + row;
+				let posX = camera.transform.x + col;
 
 				let imageSrc, widthSrc, heightSrc, widthDist, heightDist;
 
@@ -153,7 +151,7 @@ function render() {
 						0, 0,
 						tileSize, tileSize,
 
-						((camera.x * -1) + camera.target.position.x) * tileSize, ((camera.y * -1)  + camera.target.position.y) * tileSize,
+						((camera.transform.x * -1) + camera.target.trasnform.x) * tileSize, ((camera.transform.y * -1)  + camera.target.trasnform.y) * tileSize,
 						tileSize, tileSize
 					)
 				}

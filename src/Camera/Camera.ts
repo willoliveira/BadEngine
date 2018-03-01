@@ -1,14 +1,12 @@
-import { Player } from "../Player/Player";
+import { Player } from "../Character/Player";
+import { Trasnform } from "../_base/Transform";
 
 export class Camera {
 
 	public center: boolean = true;
 
 	constructor(
-		public x: number,
-		public y: number,
-		public width: number,
-		public height: number,
+		public transform: Trasnform,
 		public target?: Player,
 		public limitBorder?: { width: number, height: number } // TODO: Super provisório
 	) { }
@@ -18,19 +16,19 @@ export class Camera {
 		if (!this.target) return;
 
 		if (this.center) {
-			this.x = this.target.position.x - (this.width / 2);
-			this.y = this.target.position.y - (this.height / 2);
+			this.transform.x = this.target.trasnform.x - (this.transform.width / 2);
+			this.transform.y = this.target.trasnform.y - (this.transform.height / 2);
 		}
 
 		if (this.limitBorder) {
-			if (this.x < 0) this.x = 0;
-			if (this.y < 0) this.y = 0;
+			if (this.transform.x < 0) this.transform.x = 0;
+			if (this.transform.y < 0) this.transform.y = 0;
 
-			if (this.x + this.width > this.limitBorder.width) {
-				this.x = this.limitBorder.width - this.width;
+			if (this.transform.x + this.transform.width > this.limitBorder.width) {
+				this.transform.x = this.limitBorder.width - this.transform.width;
 			}
-			if (this.y + this.height > this.limitBorder.height) {
-				this.y = this.limitBorder.height - this.height;
+			if (this.transform.y + this.transform.height > this.limitBorder.height) {
+				this.transform.y = this.limitBorder.height - this.transform.height;
 			}
 		}
 	}
