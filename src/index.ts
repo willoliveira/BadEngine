@@ -92,13 +92,17 @@ function init() {
 
 let components: Array<GameComponent> = GameComponentsHierarchy.reduce((before, current:GameComponent) => {
 	before.push(current);
-	if (current.componests && current.componests.length) before = before.concat(current.componests);
+	if (current.componests && current.componests.length)
+		before = before.concat(current.componests);
 	return before;
 }, []);
 
 function GameLoop() {
 
+	components.forEach((c:GameComponent) => { c.FixedUpdate(); });
 	components.forEach((c:GameComponent) => { c.Update(); });
+
+	components.forEach((c:GameComponent) => { c.onRender(); });
 
 	// colocar esse TileMap nessa mesma estrutura de componente
 	render();

@@ -15,6 +15,9 @@ export class Component {
 	Update() { }
 
 
+	onRender() { }
+
+
 	OnDisable() { }
 
 	OnDestroy() { }
