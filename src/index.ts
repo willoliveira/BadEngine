@@ -1,3 +1,20 @@
+class Vehicle {
+
+}
+
+class Car extends Vehicle {
+
+}
+
+class Airplane extends Vehicle {
+
+}
+
+const arrVehicle: Array<Vehicle> = [ ]
+arrVehicle.push(new Car())
+arrVehicle.push(new Airplane())
+
+
 import { Player } from "./Character/Player";
 import { MovementDirection, Direction, Position } from "./_base/interface/position.interface";
 import { Camera } from "./Camera/Camera";
@@ -74,9 +91,9 @@ let Config = {
 let GameComponentsHierarchy: Array<GameComponent> = [];
 
 let player: Player = new Player(new Transform(1, 1, 1, 1), 1);
-let camera: Camera = new Camera(new Transform(1, 1, 13, 13), player);
+let camera: Camera = new Camera(new Transform(1, 1, 13, 13));
 
-camera.addComponent(CameraFollow as Component);
+camera.addComponent(new CameraFollow(camera.transform, player));
 
 GameComponentsHierarchy.push(camera);
 
@@ -90,7 +107,8 @@ function init() {
 	});
 
 	document.getElementById("limitBorder").addEventListener("change", (event:any) => {
-		camera.limitBorder = event.target.checked ? { width: mapLayers[0][0].length, height: mapLayers[0].length } : null;
+		var cFollow: CameraFollow = camera.getComponent('CameraFollow') as CameraFollow;
+		cFollow.limitBorder = event.target.checked ? { width: mapLayers[0][0].length, height: mapLayers[0].length } : null;
 	});
 }
 
@@ -169,16 +187,16 @@ function render() {
 				}
 
 				// TODO: Tirar depois o personagem daqui
-				if (layer + 1 === player.layer) {
-					ctx.drawImage(
-						imageBlank,
-						0, 0,
-						tileSize, tileSize,
+				// if (layer + 1 === player.layer) {
+				// 	ctx.drawImage(
+				// 		imageBlank,
+				// 		0, 0,
+				// 		tileSize, tileSize,
 
-						((camera.transform.x * -1) + camera.target.trasnform.x) * tileSize, ((camera.transform.y * -1)  + camera.target.trasnform.y) * tileSize,
-						tileSize, tileSize
-					)
-				}
+				// 		((camera.transform.x * -1) + camera.target.trasnform.x) * tileSize, ((camera.transform.y * -1)  + camera.target.trasnform.y) * tileSize,
+				// 		tileSize, tileSize
+				// 	)
+				// }
 
 				ctx.drawImage(
 					imageSrc,

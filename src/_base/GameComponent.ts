@@ -21,10 +21,10 @@ export class GameComponent extends Component {
 	}
 
 	public getComponent(type: string) {
-		return this._components.filter(c => typeof c === type)[0];
+		return this._components.filter((c:any) => c.constructor.name === type)[0];
 	}
 
 	public getComponents(type: string) {
-		return this._components.filter(c => typeof c === type);
+		return this._components.filter((c:any) => c.constructor.name === type);
 	}
 }
