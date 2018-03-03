@@ -1,7 +1,8 @@
+import { Transform } from './Transform';
 
 export class Component {
 
-	public componests: Array<Component>;
+	public parent: Component;
 
 	Awake() { }
 

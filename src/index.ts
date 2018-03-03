@@ -1,8 +1,10 @@
 import { Player } from "./Character/Player";
 import { MovementDirection, Direction, Position } from "./_base/interface/position.interface";
 import { Camera } from "./Camera/Camera";
-import { Trasnform } from "./_base/Transform";
+import { Transform } from "./_base/Transform";
 import { GameComponent } from "./_base/GameComponent";
+import { CameraFollow } from "./Camera/CameraFollow";
+import { Component } from "./_base/Component";
 
 const canvas:any = document.getElementById("stage");
 const ctx = canvas.getContext("2d");
@@ -71,8 +73,10 @@ let Config = {
 
 let GameComponentsHierarchy: Array<GameComponent> = [];
 
-let player: Player = new Player(new Trasnform(1, 1, 1, 1), 1);
-let camera: Camera = new Camera(new Trasnform(1, 1, 13, 13), player);
+let player: Player = new Player(new Transform(1, 1, 1, 1), 1);
+let camera: Camera = new Camera(new Transform(1, 1, 13, 13), player);
+
+camera.addComponent(CameraFollow as Component);
 
 GameComponentsHierarchy.push(camera);
 
@@ -92,10 +96,12 @@ function init() {
 
 let components: Array<GameComponent> = GameComponentsHierarchy.reduce((before, current:GameComponent) => {
 	before.push(current);
-	if (current.componests && current.componests.length)
-		before = before.concat(current.componests);
+	if (current.components && current.components.length)
+		before = before.concat(current.components);
 	return before;
 }, []);
+
+console.log(components);
 
 function GameLoop() {
 
