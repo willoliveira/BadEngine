@@ -1,20 +1,3 @@
-class Vehicle {
-
-}
-
-class Car extends Vehicle {
-
-}
-
-class Airplane extends Vehicle {
-
-}
-
-const arrVehicle: Array<Vehicle> = [ ]
-arrVehicle.push(new Car())
-arrVehicle.push(new Airplane())
-
-
 import { Player } from "./Character/Player";
 import { MovementDirection, Direction, Position } from "./_base/interface/position.interface";
 import { Camera } from "./Camera/Camera";
@@ -22,9 +5,12 @@ import { Transform } from "./_base/Transform";
 import { GameComponent } from "./_base/GameComponent";
 import { CameraFollow } from "./Camera/CameraFollow";
 import { Component } from "./_base/Component";
+import { GameEngine } from "./Engine/GameEngine";
+import { SpriteComponent } from "./Sprite/Sprite";
+import { TileMap } from "./Tile/TileMap";
 
-const canvas:any = document.getElementById("stage");
-const ctx = canvas.getContext("2d");
+
+const gameEngine: GameEngine = new GameEngine("stage");
 
 let image = new Image();
 let imageBlank = new Image();
@@ -84,26 +70,28 @@ let mapCollisions = [
 	[1, 1, 1, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1]
 ]
 
-let Config = {
-	FPS: 60
-}
-
 let GameComponentsHierarchy: Array<GameComponent> = [];
 
-let player: Player = new Player(new Transform(1, 1, 1, 1), 1);
-let camera: Camera = new Camera(new Transform(1, 1, 13, 13));
+let tileMap: TileMap = new TileMap(image, 64, mapLayers, mapCollisions);
 
+let player: Player = new Player(new Transform(1, 1, 1, 1), 1);
+let spritePlayer = new SpriteComponent();
+spritePlayer.sprite = imageBlank;
+player.addComponent(spritePlayer);
+
+let camera: Camera = new Camera(new Transform(1, 1, 13, 13));
 camera.addComponent(new CameraFollow(camera.transform, player));
 
-GameComponentsHierarchy.push(camera);
+//Hierarchy
+GameComponentsHierarchy.push(camera, player);
 
 function init() {
-	canvas.width = tileSize * camera.transform.width;
-	canvas.height = tileSize * camera.transform.height;
+	gameEngine.canvas.width = tileSize * camera.transform.width;
+	gameEngine.canvas.height = tileSize * camera.transform.height;
 
 	image.src = "/assets/tiles.png";
 	image.addEventListener("load", () => {
-		setInterval(GameLoop, 1000 / Config.FPS);
+		setInterval(GameLoop, 1000 / gameEngine.FPS);
 	});
 
 	document.getElementById("limitBorder").addEventListener("change", (event:any) => {
@@ -198,7 +186,7 @@ function render() {
 				// 	)
 				// }
 
-				ctx.drawImage(
+				gameEngine.context2D.drawImage(
 					imageSrc,
 					// na imagem
 					widthSrc * tileSize, heightSrc * tileSize,

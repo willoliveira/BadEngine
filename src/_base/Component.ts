@@ -1,8 +1,13 @@
 import { Transform } from './Transform';
+import { GameComponent } from './GameComponent';
 
 export class Component {
 
-	public parent: Component;
+	constructor() {
+		this.Awake();
+	}
+
+	public parent: GameComponent | Component;
 
 	Awake() { }
 
