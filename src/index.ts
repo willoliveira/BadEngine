@@ -1,3 +1,9 @@
+/**
+* Essa inicialização não ficara assim, depois pensar no start
+*
+* Conforme for evoluindo a estrutura com os componentes, vou alterando aqui o padrão
+*/
+
 import { Player } from "./Character/Player";
 import { MovementDirection, Direction, Position } from "./_base/interface/position.interface";
 import { Camera } from "./Camera/Camera";
@@ -6,16 +12,16 @@ import { GameComponent } from "./_base/GameComponent";
 import { CameraFollow } from "./Camera/CameraFollow";
 import { Component } from "./_base/Component";
 import { GameEngine } from "./Engine/GameEngine";
-import { SpriteComponent } from "./Sprite/Sprite";
+import { Sprite } from "./Sprite/Sprite";
 import { TileMap } from "./Tile/TileMap";
-
+import { ResourceItem, LoadResources } from "./_base/Resources";
 
 const gameEngine: GameEngine = new GameEngine("stage");
 
-let image = new Image();
-let imageBlank = new Image();
-imageBlank.src = "/assets/blank.png"
-
+const Resources: Array<ResourceItem> = [
+	{ name: "blankImage", url: "/assets/blank.png", type: 'image' },
+	{ name: "tileSet", url: "/assets/tiles.png", type: 'image' }
+];
 
 let tileSize = 64;
 let mapLayers = [
@@ -71,28 +77,47 @@ let mapCollisions = [
 ]
 
 let GameComponentsHierarchy: Array<GameComponent> = [];
-
-let tileMap: TileMap = new TileMap(image, 64, mapLayers, mapCollisions);
-
-let player: Player = new Player(new Transform(1, 1, 1, 1), 1);
-let spritePlayer = new SpriteComponent();
-spritePlayer.sprite = imageBlank;
-player.addComponent(spritePlayer);
+let components: Array<GameComponent>;
 
 let camera: Camera = new Camera(new Transform(1, 1, 13, 13));
-camera.addComponent(new CameraFollow(camera.transform, player));
+let player: Player;
 
-//Hierarchy
-GameComponentsHierarchy.push(camera, player);
+gameEngine.canvas.width = tileSize * camera.transform.width;
+gameEngine.canvas.height = tileSize * camera.transform.height;
+
+//Carrega os resources do game
+LoadResources(Resources, (files: any) => {
+	let image = new Image();
+	let imageBlank = new Image();
+	imageBlank.src = "/assets/blank.png"
+
+	let tileMap: TileMap = new TileMap(64, mapLayers, mapCollisions, files.blankImage.file);
+	tileMap.addComponent(new Sprite(files.tileSet.file));
+	tileMap.Awake();
+
+	player = new Player(new Transform(1, 1, 1, 1), 1);
+	player.addComponent(new Sprite(files.blankImage.file));
+	player.Awake();
+
+	//Adicionando o target na CameraFollow
+	camera.addComponent(new CameraFollow(camera.transform, player));
+	camera.Awake();
+
+	//Hierarchy: seguindo a linha do unity, depois posso mudar o nome
+	GameComponentsHierarchy.push(camera, tileMap, player);
+
+	components = GameComponentsHierarchy.reduce((before, current:GameComponent) => {
+		before.push(current);
+		if (current.components && current.components.length)
+		before = before.concat(current.components);
+		return before;
+	}, []);
+
+	init();
+})
 
 function init() {
-	gameEngine.canvas.width = tileSize * camera.transform.width;
-	gameEngine.canvas.height = tileSize * camera.transform.height;
-
-	image.src = "/assets/tiles.png";
-	image.addEventListener("load", () => {
-		setInterval(GameLoop, 1000 / gameEngine.FPS);
-	});
+	setInterval(GameLoop, 1000 / gameEngine.FPS);
 
 	document.getElementById("limitBorder").addEventListener("change", (event:any) => {
 		var cFollow: CameraFollow = camera.getComponent('CameraFollow') as CameraFollow;
@@ -100,42 +125,29 @@ function init() {
 	});
 }
 
-let components: Array<GameComponent> = GameComponentsHierarchy.reduce((before, current:GameComponent) => {
-	before.push(current);
-	if (current.components && current.components.length)
-		before = before.concat(current.components);
-	return before;
-}, []);
-
-console.log(components);
-
 function GameLoop() {
 
 	components.forEach((c:GameComponent) => { c.FixedUpdate(); });
 	components.forEach((c:GameComponent) => { c.Update(); });
 
-	components.forEach((c:GameComponent) => { c.onRender(); });
-
-	// colocar esse TileMap nessa mesma estrutura de componente
-	render();
+	components.forEach((c:GameComponent) => { c.OnRender(); });
 }
 
 function onMoveTo(pos: MovementDirection) {
 	let positionRequest: Position = {
-		x: player.trasnform.x + pos.x,
-		y: player.trasnform.y + pos.y
+		x: player.transform.x + pos.x,
+		y: player.transform.y + pos.y
 	};
 
 	if (!hasCollision(positionRequest)) {
-		player.trasnform.x += pos.x;
-		player.trasnform.y += pos.y;
+		player.transform.x += pos.x;
+		player.transform.y += pos.y;
 	}
 }
 
 function hasCollision(position: Position) {
 	// Vai sair do mapa
-	if (position.y < 0 || position.y >= mapCollisions.length ||
-		position.x < 0 || position.x >= mapCollisions[0].length) {
+	if (position.y < 0 || position.y >= mapCollisions.length || position.x < 0 || position.x >= mapCollisions[0].length) {
 		return true;
 	}
 	// 1 é colisão
@@ -143,61 +155,6 @@ function hasCollision(position: Position) {
 		return true;
 	}
 	return false
-}
-
-
-let limitBorder: boolean = true;
-
-function render() {
-
-	for (let layer = 0; layer < mapLayers.length; layer++) {
-
-		for (let row = 0; row < camera.transform.height; row++) {
-			for (let col = 0; col < camera.transform.width; col++) {
-
-				let posY = camera.transform.y + row;
-				let posX = camera.transform.x + col;
-
-				let imageSrc, widthSrc, heightSrc, widthDist, heightDist;
-
-				widthDist = col * tileSize;
-				heightDist = row * tileSize;
-
-				if (posX < 0 || posY < 0 || posX >= mapLayers[0][0].length || posY >= mapLayers[0].length) {
-					imageSrc = imageBlank;
-					widthSrc = 0;
-					heightSrc = 0;
-				} else {
-					let tileNum = mapLayers[layer][posY][posX];
-					imageSrc = image;
-					widthSrc = ((tileNum - 1) % (image.width / tileSize));
-					heightSrc = Math.floor((tileNum- 1) / (image.width / tileSize));
-				}
-
-				// TODO: Tirar depois o personagem daqui
-				// if (layer + 1 === player.layer) {
-				// 	ctx.drawImage(
-				// 		imageBlank,
-				// 		0, 0,
-				// 		tileSize, tileSize,
-
-				// 		((camera.transform.x * -1) + camera.target.trasnform.x) * tileSize, ((camera.transform.y * -1)  + camera.target.trasnform.y) * tileSize,
-				// 		tileSize, tileSize
-				// 	)
-				// }
-
-				gameEngine.context2D.drawImage(
-					imageSrc,
-					// na imagem
-					widthSrc * tileSize, heightSrc * tileSize,
-					tileSize, tileSize,
-
-					//no canvas
-					col * tileSize, row * tileSize,
-					tileSize, tileSize);
-			}
-		}
-	}
 }
 
 function onKeyPress(evt: any) {
@@ -222,6 +179,4 @@ function onKeyPress(evt: any) {
 	onMoveTo(dir);
 }
 
-window.addEventListener("keydown", onKeyPress)
-
-window.addEventListener("load", init);
+window.addEventListener("keydown", onKeyPress);

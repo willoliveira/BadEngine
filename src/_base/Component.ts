@@ -3,10 +3,6 @@ import { GameComponent } from './GameComponent';
 
 export class Component {
 
-	constructor() {
-		this.Awake();
-	}
-
 	public parent: GameComponent | Component;
 
 	Awake() { }
@@ -21,7 +17,7 @@ export class Component {
 	Update() { }
 
 
-	onRender() { }
+	OnRender() { }
 
 
 	OnDisable() { }

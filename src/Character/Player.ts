@@ -4,7 +4,7 @@ import { GameComponent } from "../_base/GameComponent";
 
 export class Player extends GameComponent {
 
-	constructor(public trasnform: Transform, public layer: number) {
-		super(trasnform);
+	constructor(public transform: Transform, public layer: number) {
+		super(transform);
 	}
 }
