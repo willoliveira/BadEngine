@@ -91,12 +91,15 @@ LoadResources(Resources, (files: any) => {
 	let imageBlank = new Image();
 	imageBlank.src = "/assets/blank.png"
 
-	let tileMap: TileMap = new TileMap(64, mapLayers, mapCollisions, files.blankImage.file);
-	tileMap.addComponent(new Sprite(files.tileSet.file));
-	tileMap.Awake();
+	let tileMap: TileMap = new TileMap(files.tileSet.file, 64, mapLayers, mapCollisions, files.blankImage.file);
+	// tileMap.addComponent(new Sprite(files.tileSet.file));
+	tileMap.Awake(); // TODO: Pensar como vai funcionar esse lance aqui
 
-	player = new Player(new Transform(1, 1, 1, 1), 1);
-	player.addComponent(new Sprite(files.blankImage.file));
+	player = new Player(new Transform(1, 1, tileSize, tileSize), 1);
+	let spritePlayer: Sprite = new Sprite(files.blankImage.file)
+	spritePlayer.layer = 0;
+	spritePlayer.orderInLayer = 1;
+	player.addComponent(spritePlayer);
 	player.Awake();
 
 	//Adicionando o target na CameraFollow
@@ -130,7 +133,27 @@ function GameLoop() {
 	components.forEach((c:GameComponent) => { c.FixedUpdate(); });
 	components.forEach((c:GameComponent) => { c.Update(); });
 
-	components.forEach((c:GameComponent) => { c.OnRender(); });
+	//Super provisório, só pra mostrar como será depois
+	components
+		.filter((c:GameComponent) => {
+			if (!c.getComponent) return false;
+			let sprite: Sprite = c.getComponent("Sprite") as Sprite;
+			return sprite;
+		})
+		.sort((a, b) => {
+			let aSprite, bSprite: Sprite;
+
+			aSprite = a.getComponent("Sprite") as Sprite;
+			bSprite = b.getComponent("Sprite") as Sprite;
+
+			if (aSprite.layer > bSprite.layer) return 1
+			else if (aSprite.layer < bSprite.layer) return -1
+			else {
+				if (aSprite.orderInLayer > bSprite.orderInLayer) return 1
+				if (aSprite.orderInLayer < bSprite.orderInLayer) return -1
+			}
+		})
+		.forEach((c:GameComponent) => { c.OnRender(); });
 }
 
 function onMoveTo(pos: MovementDirection) {

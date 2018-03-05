@@ -8,8 +8,8 @@ export class Sprite extends Component {
 		x: false,
 		y: false
 	};
-	public sortingLayer: string;
-	public order: number;
+	public layer: number;
+	public orderInLayer: number;
 
 	constructor(public sprite?: any) {
 		super();
