@@ -1,4 +1,4 @@
-const Resources: any = { };
+export const Resources:{ [key:string]: any } = { };
 
 export interface ResourceItem {
 	url: string,

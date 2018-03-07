@@ -16,7 +16,7 @@ export class GameComponent extends Component {
 	}
 
 	public addComponent(component: GameComponent|Component) {
-		this.parent = this;
+		component.parent = this;
 		this._components.push(component);
 	}
 

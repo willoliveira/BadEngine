@@ -17,7 +17,7 @@ export class TileMapLayer extends GameComponent {
 		public mapLayers: Array<Array<number>>,
 		public blankImage: any // TODO: ficou ruim isso, depois rever
 	) {
-		super(new Transform(1,1,1,1));
+		super(new Transform(0, 0, 1 , 1));
 	}
 
 

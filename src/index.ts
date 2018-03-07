@@ -15,12 +15,14 @@ import { GameEngine } from "./Engine/GameEngine";
 import { Sprite } from "./Sprite/Sprite";
 import { TileMap } from "./Tile/TileMap";
 import { ResourceItem, LoadResources } from "./_base/Resources";
+import { Animation } from "./Animation/Animation";
 
 const gameEngine: GameEngine = new GameEngine("stage");
 
 const Resources: Array<ResourceItem> = [
 	{ name: "blankImage", url: "/assets/blank.png", type: 'image' },
-	{ name: "tileSet", url: "/assets/tiles.png", type: 'image' }
+	{ name: "tileSet", url: "/assets/tiles.png", type: 'image' },
+	{ name: "megaman", url: "/assets/megaman.png", type: 'image' },
 ];
 
 let tileSize = 64;
@@ -93,18 +95,19 @@ LoadResources(Resources, (files: any) => {
 
 	let tileMap: TileMap = new TileMap(files.tileSet.file, 64, mapLayers, mapCollisions, files.blankImage.file);
 	// tileMap.addComponent(new Sprite(files.tileSet.file));
-	tileMap.Awake(); // TODO: Pensar como vai funcionar esse lance aqui
+	// tileMap.Awake(); // TODO: Pensar como vai funcionar esse lance aqui
 
 	player = new Player(new Transform(1, 1, tileSize, tileSize), 1);
 	let spritePlayer: Sprite = new Sprite(files.blankImage.file)
 	spritePlayer.layer = 0;
 	spritePlayer.orderInLayer = 1;
 	player.addComponent(spritePlayer);
-	player.Awake();
+	player.addComponent(new Animation());
+	// player.Awake();
 
 	//Adicionando o target na CameraFollow
 	camera.addComponent(new CameraFollow(camera.transform, player));
-	camera.Awake();
+	// camera.Awake();
 
 	//Hierarchy: seguindo a linha do unity, depois posso mudar o nome
 	GameComponentsHierarchy.push(camera, tileMap, player);
@@ -115,6 +118,8 @@ LoadResources(Resources, (files: any) => {
 		before = before.concat(current.components);
 		return before;
 	}, []);
+
+	components.forEach((c:GameComponent) => { c.Awake(); });	// Testar isso também
 
 	init();
 })
