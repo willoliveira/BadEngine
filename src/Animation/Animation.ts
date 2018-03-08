@@ -79,8 +79,15 @@ export class Animation extends Component {
 			} else {
 				this.currentFrame += 1
 			}
+			this.spriteComponent.sprite.canvas.getContext("2d").drawImage(
+				Resources[this.currentState.frames[this.currentFrame].image].file,
 
-			this.spriteComponent.sprite = Resources[this.currentState.frames[this.currentFrame].image].file;
+				this.currentState.frames[this.currentFrame].x * this.currentState.frames[this.currentFrame].width,
+				this.currentState.frames[this.currentFrame].y * this.currentState.frames[this.currentFrame].height,
+				this.currentState.frames[this.currentFrame].width, this.currentState.frames[this.currentFrame].height,
+
+				0, 0, this.currentState.frames[this.currentFrame].width, this.currentState.frames[this.currentFrame].height
+			);
 		}
 
 		this.currentFrameDelay += 1;

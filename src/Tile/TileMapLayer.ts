@@ -10,7 +10,7 @@ import { GameEngine } from "../Engine/GameEngine";
 */
 export class TileMapLayer extends GameComponent {
 
-	tileSet: any;
+	tileSet: Sprite;
 
 	constructor(
 		public tileSize: number,
@@ -43,9 +43,9 @@ export class TileMapLayer extends GameComponent {
 					heightSrc = 0;
 				} else {
 					let tileNum = this.mapLayers[posY][posX];
-					imageSrc = this.tileSet.sprite;
-					widthSrc = ((tileNum - 1) % (this.tileSet.sprite.width / this.tileSize));
-					heightSrc = Math.floor((tileNum- 1) / (this.tileSet.sprite.width / this.tileSize));
+					imageSrc = this.tileSet.sprite.image;
+					widthSrc = ((tileNum - 1) % (this.tileSet.sprite.image.width / this.tileSize));
+					heightSrc = Math.floor((tileNum- 1) / (this.tileSet.sprite.image.width / this.tileSize));
 				}
 
 				GameEngine.instance.context2D.drawImage(

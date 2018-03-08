@@ -23,14 +23,14 @@ export class Player extends GameComponent {
 	OnRender() {
 		this.cFollow = Camera.instance.getComponent("CameraFollow") as CameraFollow;
 
-		GameEngine.instance.context2D.drawImage(
-			this.spriteComponent.sprite,
-			0, 0,
-			64, 64,
+		// GameEngine.instance.context2D.drawImage(
+		// 	this.spriteComponent.sprite,
+		// 	0, 0,
+		// 	64, 64,
 
-			((Camera.instance.transform.x * -1) + this.cFollow.target.transform.x) * 64, ((Camera.instance.transform.y * -1)  + this.cFollow.target.transform.y) * 64,
-			64, 64
-		)
+		// 	((Camera.instance.transform.x * -1) + this.cFollow.target.transform.x) * 64, ((Camera.instance.transform.y * -1)  + this.cFollow.target.transform.y) * 64,
+		// 	64, 64
+		// )
 
 	}
 }
