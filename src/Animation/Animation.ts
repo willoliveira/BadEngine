@@ -4,90 +4,67 @@ import { Sprite } from "../Sprite/Sprite";
 import { GameEngine } from "../Engine/GameEngine";
 import { Resources } from "../_base/Resources";
 
-interface AnimationState {
+export interface AnimationState {
 	default: boolean,
 	name: string,
 	frames: Array<AnimationStateFrame>
 }
 
-interface AnimationStateFrame {
-	y: number,
-	x: number,
-	width: number,
-	height: number,
+export interface AnimationStateFrame {
+	rect: {
+		y: number,
+		x: number,
+		width: number,
+		height: number
+	}
 	delay: number,
 	image: string
 }
 
 export class Animation extends Component {
 
-	currentFrame = 0;
-	currentFrameDelay = 0;
-	currentState: AnimationState;
+	private currentFrame = 0;
+	private currentFrameDelay = 0;
+	private _animationStates: Array<AnimationState> = [ ];
+	private spriteComponent: Sprite;
 
-	spriteComponent: Sprite;
-	//mock
-	idleState: AnimationState = {
-		default: true,
-		name: "idle",
-		frames: [
-			{ y: 0, x: 0, width: 36, height: 36, image: 'megaman', delay: 5 },
-			{ y: 0, x: 36, width: 36, height: 36, image: 'megaman', delay: 5 },
-			{ y: 0, x: 72, width: 36, height: 36, image: 'megaman', delay: 5 },
-			{ y: 0, x: 108, width: 36, height: 36, image: 'megaman', delay: 5 }
-		]
-	};
+	public currentState: AnimationState;
+	public animationController: any; // TODO: Fazer um controlador de transição de animações, penso em algo parecido com unity
 
-	runState: AnimationState = {
-		default: false,
-		name: "run",
-		frames: [
-			{ y: 36, x: 0, width: 36, height: 36, image: 'megaman', delay: 5 },
-			{ y: 36, x: 36, width: 36, height: 36, image: 'megaman', delay: 5 },
-			{ y: 36, x: 72, width: 36, height: 36, image: 'megaman', delay: 5 },
-			{ y: 36, x: 108, width: 36, height: 36, image: 'megaman', delay: 5 },
-			{ y: 36, x: 144, width: 36, height: 36, image: 'megaman', delay: 5 },
-			{ y: 36, x: 180, width: 36, height: 36, image: 'megaman', delay: 5 },
-			{ y: 36, x: 216, width: 36, height: 36, image: 'megaman', delay: 5 }
-		]
+
+	set animationStates(value: Array<AnimationState>) {
+		this._animationStates = value;
+
+		this.currentState = this._animationStates.find(state => state.default);
+		// TODO: Aqui não será necessário mais tarde, obrigar sempre ter uma animação default
+		if (!this.currentState) this.currentState = this._animationStates[0];
 	}
-
-	animationStates: Array<AnimationState> = [this.idleState, this.runState];
 
 	constructor() {
 		super();
-
-		this.currentState = this.animationStates.find(state => state.default);
 	}
 
-	setState(state: string) {
-		this.currentState = this.animationStates.find(state => state.default);
+	setState(stateName: string) {
+		this.currentState = this._animationStates.find((state: AnimationState) => state.name === stateName);
 	}
 
 	Awake() {
 		let parent = this.parent as GameComponent;
 		this.spriteComponent = parent.getComponent("Sprite") as Sprite;
-
-		this.spriteComponent.sprite = Resources[this.currentState.frames[this.currentFrame].image].file;
 	}
 
 	Update() {
-
+		if (!this._animationStates.length) return;
 		if (this.currentState.frames[this.currentFrame].delay === this.currentFrameDelay) {
-			if (this.currentFrame + 1 > this.currentState.frames.length) {
+			if (this.currentFrame + 1 > this.currentState.frames.length - 1) {
 				this.currentFrame = 0;
 			} else {
 				this.currentFrame += 1
 			}
-			this.spriteComponent.sprite.canvas.getContext("2d").drawImage(
-				Resources[this.currentState.frames[this.currentFrame].image].file,
+			this.currentFrameDelay = 0;
 
-				this.currentState.frames[this.currentFrame].x * this.currentState.frames[this.currentFrame].width,
-				this.currentState.frames[this.currentFrame].y * this.currentState.frames[this.currentFrame].height,
-				this.currentState.frames[this.currentFrame].width, this.currentState.frames[this.currentFrame].height,
-
-				0, 0, this.currentState.frames[this.currentFrame].width, this.currentState.frames[this.currentFrame].height
-			);
+			this.spriteComponent.sprite.sourceRect = this.currentState.frames[this.currentFrame].rect;
+			this.spriteComponent.sprite.image = Resources[this.currentState.frames[this.currentFrame].image].file;
 		}
 
 		this.currentFrameDelay += 1;
