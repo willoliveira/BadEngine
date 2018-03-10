@@ -15,30 +15,73 @@ export class Player extends GameComponent {
 
 	//tirar daqui depois
 	// Megaman
+	// states: Array<AnimationState> = [
+	// 	{
+	// 		default: true,
+	// 		name: "idle",
+	// 		frames: [
+	// 			{ rect: { y: 0, x: 0, width: 36, height: 36 }, image: 'megaman', delay: 7 },
+	// 			{ rect: { y: 0, x: 36, width: 36, height: 36 }, image: 'megaman', delay: 7 },
+	// 			{ rect: { y: 0, x: 72, width: 36, height: 36 }, image: 'megaman', delay: 7 },
+	// 			{ rect: { y: 0, x: 108, width: 36, height: 36 }, image: 'megaman', delay: 7 }
+	// 		]
+	// 	}, {
+	// 		default: false,
+	// 		name: "run",
+	// 		frames: [
+	// 			{ rect: { y: 35, x: 0, width: 36, height: 36 }, image: 'megaman', delay: 7 },
+	// 			{ rect: { y: 35, x: 36, width: 36, height: 36 }, image: 'megaman', delay: 7 },
+	// 			{ rect: { y: 35, x: 72, width: 36, height: 36 }, image: 'megaman', delay: 7 },
+	// 			{ rect: { y: 35, x: 108, width: 36, height: 36 }, image: 'megaman', delay: 7 },
+	// 			{ rect: { y: 35, x: 144, width: 36, height: 36 }, image: 'megaman', delay: 7 },
+	// 			{ rect: { y: 35, x: 180, width: 36, height: 36 }, image: 'megaman', delay: 7 },
+	// 			{ rect: { y: 35, x: 216, width: 36, height: 36 }, image: 'megaman', delay: 7 }
+	// 		]
+	// 	}
+	// ];
+	//link
 	states: Array<AnimationState> = [
 		{
-			default: true,
+			default: false,
 			name: "idle",
 			frames: [
-				{ rect: { y: 0, x: 0, width: 36, height: 36 }, image: 'megaman', delay: 7 },
-				{ rect: { y: 0, x: 36, width: 36, height: 36 }, image: 'megaman', delay: 7 },
-				{ rect: { y: 0, x: 72, width: 36, height: 36 }, image: 'megaman', delay: 7 },
-				{ rect: { y: 0, x: 108, width: 36, height: 36 }, image: 'megaman', delay: 7 }
+				{ rect: { y: 0, x: 0, width: 36, height: 36 }, image: 'link', delay: 5 },
+				{ rect: { y: 0, x: 36, width: 36, height: 36 }, image: 'link', delay: 5 },
+				{ rect: { y: 0, x: 72, width: 36, height: 36 }, image: 'link', delay: 5 },
+				{ rect: { y: 0, x: 108, width: 36, height: 36 }, image: 'link', delay: 5 }
+			]
+		}, {
+			default: true,
+			name: "run-vertical",
+			frames: [
+				{ rect: { y: 443, x: 0, width: 102, height: 110.5 }, image: 'link', delay: 5 },
+				{ rect: { y: 443, x: 102, width: 102, height: 110.5 }, image: 'link', delay: 5 },
+				{ rect: { y: 443, x: 204, width: 102, height: 110.5 }, image: 'link', delay: 5 },
+				{ rect: { y: 443, x: 306, width: 102, height: 110.5 }, image: 'link', delay: 5 },
+				{ rect: { y: 443, x: 408, width: 102, height: 110.5 }, image: 'link', delay: 5 },
+				{ rect: { y: 443, x: 510, width: 102, height: 110.5 }, image: 'link', delay: 5 },
+				{ rect: { y: 443, x: 612, width: 102, height: 110.5 }, image: 'link', delay: 5 },
+				{ rect: { y: 443, x: 714, width: 102, height: 110.5 }, image: 'link', delay: 5 },
+				{ rect: { y: 443, x: 816, width: 102, height: 110.5 }, image: 'link', delay: 5 },
+				{ rect: { y: 443, x: 918, width: 102, height: 110.5 }, image: 'link', delay: 5 }
 			]
 		}, {
 			default: false,
-			name: "run",
+			name: "run-horizontal",
 			frames: [
-				{ rect: { y: 35, x: 0, width: 36, height: 36 }, image: 'megaman', delay: 7 },
-				{ rect: { y: 35, x: 36, width: 36, height: 36 }, image: 'megaman', delay: 7 },
-				{ rect: { y: 35, x: 72, width: 36, height: 36 }, image: 'megaman', delay: 7 },
-				{ rect: { y: 35, x: 108, width: 36, height: 36 }, image: 'megaman', delay: 7 },
-				{ rect: { y: 35, x: 144, width: 36, height: 36 }, image: 'megaman', delay: 7 },
-				{ rect: { y: 35, x: 180, width: 36, height: 36 }, image: 'megaman', delay: 7 },
-				{ rect: { y: 35, x: 216, width: 36, height: 36 }, image: 'megaman', delay: 7 }
+				{ rect: { y: 773.5, x: 0, width: 102, height: 110.5 }, image: 'link', delay: 5 },
+				{ rect: { y: 773.5, x: 102, width: 102, height: 110.5 }, image: 'link', delay: 5 },
+				{ rect: { y: 773.5, x: 204, width: 102, height: 110.5 }, image: 'link', delay: 5 },
+				{ rect: { y: 773.5, x: 306, width: 102, height: 110.5 }, image: 'link', delay: 5 },
+				{ rect: { y: 773.5, x: 408, width: 102, height: 110.5 }, image: 'link', delay: 5 },
+				{ rect: { y: 773.5, x: 510, width: 102, height: 110.5 }, image: 'link', delay: 5 },
+				{ rect: { y: 773.5, x: 612, width: 102, height: 110.5 }, image: 'link', delay: 5 },
+				{ rect: { y: 773.5, x: 714, width: 102, height: 110.5 }, image: 'link', delay: 5 },
+				{ rect: { y: 773.5, x: 816, width: 102, height: 110.5 }, image: 'link', delay: 5 },
+				{ rect: { y: 773.5, x: 918, width: 102, height: 110.5 }, image: 'link', delay: 5 }
 			]
 		}
-	]
+	];
 
 	constructor(public transform: Transform, public layer: number) {
 		super(transform);
