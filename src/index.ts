@@ -82,11 +82,11 @@ let mapCollisions = [
 let GameComponentsHierarchy: Array<GameComponent> = [];
 let components: Array<GameComponent>;
 
-let camera: Camera = new Camera(new Transform(1, 1, 13, 13));
+let camera: Camera = new Camera(new Transform(1*tileSize, 1*tileSize, 12*tileSize, 12*tileSize));
 let player: Player;
 
-gameEngine.canvas.width = tileSize * camera.transform.width;
-gameEngine.canvas.height = tileSize * camera.transform.height;
+gameEngine.canvas.width = camera.transform.width;
+gameEngine.canvas.height = camera.transform.height;
 
 //Carrega os resources do game
 LoadResources(Resources, (files: any) => {
@@ -97,7 +97,7 @@ LoadResources(Resources, (files: any) => {
 	let tileMap: TileMap = new TileMap(files.tileSet.file, 64, mapLayers, mapCollisions, files.blankImage.file);
 	tileMap.Awake();
 
-	player = new Player(new Transform(1, 1, tileSize, tileSize), 1);
+	player = new Player(new Transform(1*tileSize, 1*tileSize, tileSize, tileSize), 1);
 	let spritePlayer: Sprite = new Sprite(files.blankImage.file)
 	spritePlayer.layer = 0;
 	spritePlayer.orderInLayer = 1;
@@ -118,6 +118,8 @@ LoadResources(Resources, (files: any) => {
 		before = before.concat(current.components);
 		return before;
 	}, []);
+
+	console.log(components)
 
 	components.forEach((c:GameComponent) => { c.Awake(); });	// Testar isso também
 
@@ -170,14 +172,15 @@ function GameLoop() {
 
 function onMoveTo(pos: MovementDirection) {
 	let positionRequest: Position = {
-		x: player.transform.x + pos.x,
-		y: player.transform.y + pos.y
+		x: Math.floor((player.transform.x + pos.x) /64),
+		y: Math.floor((player.transform.y + pos.y) /64)
 	};
 
-	if (!hasCollision(positionRequest)) {
+	// if (!hasCollision(positionRequest)) {
 		player.transform.x += pos.x;
 		player.transform.y += pos.y;
-	}
+	// }
+	// console.log(player.transform)
 }
 
 function hasCollision(position: Position) {
@@ -196,19 +199,19 @@ function onKeyPress(evt: any) {
 	let dir: MovementDirection = { x: Direction.Idle, y: Direction.Idle };
 	//left
 	if (evt.keyCode === 37) {
-		dir.x = -1;
+		dir.x = -5;
 	}
 	//right
 	if (evt.keyCode === 39) {
-		dir.x = 1;
+		dir.x = 5;
 	}
 	//down
 	if (evt.keyCode === 40) {
-		dir.y = 1;
+		dir.y = 5;
 	}
 	//up
 	if (evt.keyCode === 38) {
-		dir.y = -1;
+		dir.y = -5;
 	}
 
 	onMoveTo(dir);

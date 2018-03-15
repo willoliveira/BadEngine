@@ -26,17 +26,20 @@ export class TileMapLayer extends GameComponent {
 	}
 
 	OnRender() {
-		for (let row = 0; row < Camera.instance.transform.height; row++) {
-			for (let col = 0; col < Camera.instance.transform.width; col++) {
+		let rowLen = Math.floor(Camera.instance.transform.height/64);
+		let colLen = Math.floor(Camera.instance.transform.width/64);
 
-				let posY = Camera.instance.transform.y + row;
-				let posX = Camera.instance.transform.x + col;
+		for (let row = 0; row < rowLen; row++) {
+			for (let col = 0; col < colLen; col++) {
+
+				let posY = Math.floor(Camera.instance.transform.y/this.tileSize) + row;
+				let posX = Math.floor(Camera.instance.transform.x/this.tileSize) + col;
 
 				let imageSrc, widthSrc, heightSrc, widthDist, heightDist;
 
 				widthDist = col * this.tileSize;
 				heightDist = row * this.tileSize;
-
+				// TODO: Depois ver de pintar com hexa ao inves de imagem
 				if (posX < 0 || posY < 0 || posX >= this.mapLayers[0].length || posY >= this.mapLayers.length) {
 					imageSrc = this.blankImage;
 					widthSrc = 0;

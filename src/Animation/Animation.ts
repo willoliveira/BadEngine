@@ -38,6 +38,7 @@ export class Animation extends Component {
 		this.currentState = this._animationStates.find(state => state.default);
 		// TODO: Aqui não será necessário mais tarde, obrigar sempre ter uma animação default
 		if (!this.currentState) this.currentState = this._animationStates[0];
+
 	}
 
 	constructor() {
@@ -48,9 +49,16 @@ export class Animation extends Component {
 		this.currentState = this._animationStates.find((state: AnimationState) => state.name === stateName);
 	}
 
+	setAnimationFrame() {
+		this.spriteComponent.sprite.sourceRect = this.currentState.frames[this.currentFrame].rect;
+		this.spriteComponent.sprite.image = Resources[this.currentState.frames[this.currentFrame].image].file;
+	}
+
 	Awake() {
 		let parent = this.parent as GameComponent;
 		this.spriteComponent = parent.getComponent("Sprite") as Sprite;
+
+		this.setAnimationFrame();
 	}
 
 	Update() {
@@ -63,8 +71,7 @@ export class Animation extends Component {
 			}
 			this.currentFrameDelay = 0;
 
-			this.spriteComponent.sprite.sourceRect = this.currentState.frames[this.currentFrame].rect;
-			this.spriteComponent.sprite.image = Resources[this.currentState.frames[this.currentFrame].image].file;
+			this.setAnimationFrame();
 		}
 
 		this.currentFrameDelay += 1;

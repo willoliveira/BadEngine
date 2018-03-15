@@ -13,7 +13,7 @@ export class Player extends GameComponent {
 	private cFollow: CameraFollow;
 	private animation: Animation;
 
-	//tirar daqui depois
+	// tirar daqui depois
 	// Megaman
 	// states: Array<AnimationState> = [
 	// 	{
@@ -42,16 +42,18 @@ export class Player extends GameComponent {
 	//link
 	states: Array<AnimationState> = [
 		{
-			default: false,
+			default: true,
 			name: "idle",
 			frames: [
-				{ rect: { y: 0, x: 0, width: 36, height: 36 }, image: 'link', delay: 5 },
-				{ rect: { y: 0, x: 36, width: 36, height: 36 }, image: 'link', delay: 5 },
-				{ rect: { y: 0, x: 72, width: 36, height: 36 }, image: 'link', delay: 5 },
-				{ rect: { y: 0, x: 108, width: 36, height: 36 }, image: 'link', delay: 5 }
+				{ rect: { y: 0, x: 0, width: 102, height: 110.5 }, image: 'link', delay: 100 },
+				{ rect: { y: 0, x: 102, width: 102, height: 110.5 }, image: 'link', delay: 5 },
+				{ rect: { y: 0, x: 204, width: 102, height: 110.5 }, image: 'link', delay: 5 },
+				{ rect: { y: 0, x: 0, width: 102, height: 110.5 }, image: 'link', delay: 150 },
+				{ rect: { y: 0, x: 102, width: 102, height: 110.5 }, image: 'link', delay: 5 },
+				{ rect: { y: 0, x: 204, width: 102, height: 110.5 }, image: 'link', delay: 5 }
 			]
 		}, {
-			default: true,
+			default: false,
 			name: "run-vertical",
 			frames: [
 				{ rect: { y: 443, x: 0, width: 102, height: 110.5 }, image: 'link', delay: 5 },
@@ -97,8 +99,8 @@ export class Player extends GameComponent {
 
 	Update() {
 		this.spriteComponent.sprite.destRect = {
-			x: ((Camera.instance.transform.x * -1) + this.cFollow.target.transform.x) * 64,
-			y: ((Camera.instance.transform.y * -1)  + this.cFollow.target.transform.y) * 64,
+			x: ((Camera.instance.transform.x * -1) + this.cFollow.target.transform.x),
+			y: ((Camera.instance.transform.y * -1)  + this.cFollow.target.transform.y),
 			width: 64,
 			height: 64
 		}
@@ -119,7 +121,9 @@ export class Player extends GameComponent {
 			srcRect.width, srcRect.height,
 
 			destRect.x, destRect.y,
-			destRect.width, destRect.height,
+			destRect.width, destRect.height
 		)
+
+		// console.log(srcRect, destRect)
 	}
 }
