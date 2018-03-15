@@ -1,0 +1,79 @@
+import { Component } from "../_base/Component";
+import { GameComponent } from "../_base/GameComponent";
+import { Sprite } from "../Sprite/Sprite";
+import { GameEngine } from "../Engine/GameEngine";
+import { Resources } from "../_base/Resources";
+
+export interface AnimationState {
+	default: boolean,
+	name: string,
+	frames: Array<AnimationStateFrame>
+}
+
+export interface AnimationStateFrame {
+	rect: {
+		y: number,
+		x: number,
+		width: number,
+		height: number
+	}
+	delay: number,
+	image: string
+}
+
+export class Animation extends Component {
+
+	private currentFrame = 0;
+	private currentFrameDelay = 0;
+	private _animationStates: Array<AnimationState> = [ ];
+	private spriteComponent: Sprite;
+
+	public currentState: AnimationState;
+	public animationController: any; // TODO: Fazer um controlador de transição de animações, penso em algo parecido com unity
+
+
+	set animationStates(value: Array<AnimationState>) {
+		this._animationStates = value;
+
+		this.currentState = this._animationStates.find(state => state.default);
+		// TODO: Aqui não será necessário mais tarde, obrigar sempre ter uma animação default
+		if (!this.currentState) this.currentState = this._animationStates[0];
+
+	}
+
+	constructor() {
+		super();
+	}
+
+	setState(stateName: string) {
+		this.currentState = this._animationStates.find((state: AnimationState) => state.name === stateName);
+	}
+
+	setAnimationFrame() {
+		this.spriteComponent.sprite.sourceRect = this.currentState.frames[this.currentFrame].rect;
+		this.spriteComponent.sprite.image = Resources[this.currentState.frames[this.currentFrame].image].file;
+	}
+
+	Awake() {
+		let parent = this.parent as GameComponent;
+		this.spriteComponent = parent.getComponent("Sprite") as Sprite;
+
+		this.setAnimationFrame();
+	}
+
+	Update() {
+		if (!this._animationStates.length) return;
+		if (this.currentState.frames[this.currentFrame].delay === this.currentFrameDelay) {
+			if (this.currentFrame + 1 > this.currentState.frames.length - 1) {
+				this.currentFrame = 0;
+			} else {
+				this.currentFrame += 1
+			}
+			this.currentFrameDelay = 0;
+
+			this.setAnimationFrame();
+		}
+
+		this.currentFrameDelay += 1;
+	}
+}
