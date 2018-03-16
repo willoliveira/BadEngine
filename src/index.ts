@@ -131,7 +131,7 @@ function init() {
 
 	document.getElementById("limitBorder").addEventListener("change", (event:any) => {
 		var cFollow: CameraFollow = camera.getComponent('CameraFollow') as CameraFollow;
-		cFollow.limitBorder = event.target.checked ? { width: mapLayers[0][0].length, height: mapLayers[0].length } : null;
+		cFollow.limitBorder = event.target.checked ? { width: mapLayers[0][0].length * 64, height: mapLayers[0].length * 64 } : null;
 	});
 }
 

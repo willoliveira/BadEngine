@@ -12,6 +12,9 @@ export class TileMapLayer extends GameComponent {
 
 	tileSet: Sprite;
 
+	beforeX = 0;
+	currentX = 0;
+
 	constructor(
 		public tileSize: number,
 		public mapLayers: Array<Array<number>>,
@@ -29,9 +32,11 @@ export class TileMapLayer extends GameComponent {
 		let rowLen = Math.floor(Camera.instance.transform.height/64);
 		let colLen = Math.floor(Camera.instance.transform.width/64);
 
-		for (let row = 0; row < rowLen; row++) {
-			for (let col = 0; col < colLen; col++) {
+		let sumPosX = Camera.instance.transform.x - (Math.floor(Camera.instance.transform.x/this.tileSize) * this.tileSize);
+		let sumPosY = Camera.instance.transform.y - (Math.floor(Camera.instance.transform.y/this.tileSize) * this.tileSize);
 
+		for (let row = 0; row < rowLen + 1; row++) {
+			for (let col = 0; col < colLen + 1; col++) {
 				let posY = Math.floor(Camera.instance.transform.y/this.tileSize) + row;
 				let posX = Math.floor(Camera.instance.transform.x/this.tileSize) + col;
 
@@ -58,7 +63,7 @@ export class TileMapLayer extends GameComponent {
 					this.tileSize, this.tileSize,
 
 					//no canvas
-					col * this.tileSize, row * this.tileSize,
+					(col  * this.tileSize) - sumPosX, (row * this.tileSize) - sumPosY,
 					this.tileSize, this.tileSize);
 				}
 			}
