@@ -119,8 +119,6 @@ LoadResources(Resources, (files: any) => {
 		return before;
 	}, []);
 
-	console.log(components)
-
 	components.forEach((c:GameComponent) => { c.Awake(); });	// Testar isso também
 
 	init();
