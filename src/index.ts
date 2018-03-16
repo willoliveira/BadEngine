@@ -20,10 +20,10 @@ import { Animation } from "./Animation/Animation";
 const gameEngine: GameEngine = new GameEngine("stage");
 
 const Resources: Array<ResourceItem> = [
-	{ name: "blankImage", url: "./assets/blank.png", type: 'image' },
-	{ name: "tileSet", url: "./assets/tiles.png", type: 'image' },
-	{ name: "megaman", url: "./assets/megaman.png", type: 'image' },
-	{ name: "link", url: "./assets/link/zelda-link.png", type: 'image' },
+	{ name: "blankImage", url: "assets/blank.png", type: 'image' },
+	{ name: "tileSet", url: "assets/tiles.png", type: 'image' },
+	{ name: "megaman", url: "assets/megaman.png", type: 'image' },
+	{ name: "link", url: "assets/link/zelda-link.png", type: 'image' },
 ];
 
 let tileSize = 64;
