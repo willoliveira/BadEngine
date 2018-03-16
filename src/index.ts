@@ -199,19 +199,19 @@ function onKeyPress(evt: any) {
 	let dir: MovementDirection = { x: Direction.Idle, y: Direction.Idle };
 	//left
 	if (evt.keyCode === 37) {
-		dir.x = -64;
+		dir.x = -5;
 	}
 	//right
 	if (evt.keyCode === 39) {
-		dir.x = 64;
+		dir.x = 5;
 	}
 	//down
 	if (evt.keyCode === 40) {
-		dir.y = 64;
+		dir.y = 5;
 	}
 	//up
 	if (evt.keyCode === 38) {
-		dir.y = -64;
+		dir.y = -5;
 	}
 
 	onMoveTo(dir);
