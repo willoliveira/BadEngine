@@ -46,7 +46,16 @@ export class Animation extends Component {
 	}
 
 	setState(stateName: string) {
+		if (this.currentState.name === stateName) return;
 		this.currentState = this._animationStates.find((state: AnimationState) => state.name === stateName);
+
+		this.clearState();
+		this.setAnimationFrame();
+	}
+
+	private clearState() {
+		this.currentFrame = 0;
+		this.currentFrameDelay = 0;
 	}
 
 	setAnimationFrame() {

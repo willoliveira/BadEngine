@@ -170,6 +170,7 @@ function GameLoop() {
 		.forEach((c:GameComponent) => { c.OnRender(); });
 }
 
+let movementDirection: MovementDirection;
 function onMoveTo(pos: MovementDirection) {
 	let positionRequest: Position = {
 		x: Math.floor((player.transform.x + pos.x) /64),
@@ -197,24 +198,63 @@ function hasCollision(position: Position) {
 
 function onKeyPress(evt: any) {
 	let dir: MovementDirection = { x: Direction.Idle, y: Direction.Idle };
+	const playerAnimation = player.getComponent("Animation") as Animation;
+	const playerSprite = player.getComponent("Sprite") as Sprite;
 	//left
 	if (evt.keyCode === 37) {
+		if (playerAnimation) {
+			playerAnimation.setState("run-left");
+		}
 		dir.x = -5;
+		playerSprite.flip.x = true;
 	}
 	//right
 	if (evt.keyCode === 39) {
+		if (playerAnimation) {
+			playerAnimation.setState("run-right");
+		}
 		dir.x = 5;
+		playerSprite.flip.x = false;
 	}
 	//down
 	if (evt.keyCode === 40) {
+		if (playerAnimation) {
+			playerAnimation.setState("run-down");
+		}
 		dir.y = 5;
 	}
 	//up
 	if (evt.keyCode === 38) {
+		if (playerAnimation) {
+			playerAnimation.setState("run-up");
+		}
 		dir.y = -5;
 	}
+
+	movementDirection = dir;
 
 	onMoveTo(dir);
 }
 
+function onKeyUp() {
+	const playerAnimation = player.getComponent("Animation") as Animation;
+	const playerSprite = player.getComponent("Sprite") as Sprite;
+
+	if (movementDirection.x === 0) {
+		if (playerAnimation.currentState.name === "run-down") {
+			playerAnimation.setState("idle-down");
+		} else if (playerAnimation.currentState.name === "run-up") {
+			playerAnimation.setState("idle-up");
+		}
+	}
+	else if (movementDirection.y === 0) {
+		if (playerAnimation.currentState.name === "run-right") {
+			playerAnimation.setState("idle-right");
+		} else if (playerAnimation.currentState.name === "run-left") {
+			playerAnimation.setState("idle-left");
+		}
+	}
+}
+
 window.addEventListener("keydown", onKeyPress);
+window.addEventListener("keyup", onKeyUp);

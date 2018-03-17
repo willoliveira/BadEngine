@@ -43,18 +43,42 @@ export class Player extends GameComponent {
 	states: Array<AnimationState> = [
 		{
 			default: true,
-			name: "idle",
+			name: "idle-down",
 			frames: [
 				{ rect: { y: 0, x: 0, width: 102, height: 110.5 }, image: 'link', delay: 100 },
 				{ rect: { y: 0, x: 102, width: 102, height: 110.5 }, image: 'link', delay: 5 },
-				{ rect: { y: 0, x: 204, width: 102, height: 110.5 }, image: 'link', delay: 5 },
-				{ rect: { y: 0, x: 0, width: 102, height: 110.5 }, image: 'link', delay: 150 },
-				{ rect: { y: 0, x: 102, width: 102, height: 110.5 }, image: 'link', delay: 5 },
 				{ rect: { y: 0, x: 204, width: 102, height: 110.5 }, image: 'link', delay: 5 }
 			]
-		}, {
+		},
+		{
 			default: false,
-			name: "run-vertical",
+			name: "idle-left",
+			frames: [
+				{ rect: { y: 111.5, x: 0, width: 102, height: 110.5 }, image: 'link', delay: 100 },
+				{ rect: { y: 111.5, x: 102, width: 102, height: 110.5 }, image: 'link', delay: 5 },
+				{ rect: { y: 111.5, x: 204, width: 102, height: 110.5 }, image: 'link', delay: 5 }
+			]
+		},
+		{
+			default: false,
+			name: "idle-up",
+			frames: [
+				{ rect: { y: 221, x: 0, width: 102, height: 110.5 }, image: 'link', delay: 100 },
+			]
+		},
+		{
+			default: false,
+			name: "idle-right",
+			frames: [
+				{ rect: { y: 332.5, x: 0, width: 102, height: 110.5 }, image: 'link', delay: 100 },
+				{ rect: { y: 332.5, x: 98, width: 102, height: 110.5 }, image: 'link', delay: 5 },
+				{ rect: { y: 332.5, x: 204, width: 102, height: 110.5 }, image: 'link', delay: 5 }
+			]
+		},
+
+		{
+			default: false,
+			name: "run-down",
 			frames: [
 				{ rect: { y: 443, x: 0, width: 102, height: 110.5 }, image: 'link', delay: 5 },
 				{ rect: { y: 443, x: 102, width: 102, height: 110.5 }, image: 'link', delay: 5 },
@@ -69,7 +93,37 @@ export class Player extends GameComponent {
 			]
 		}, {
 			default: false,
-			name: "run-horizontal",
+			name: "run-up",
+			frames: [
+				{ rect: { y: 664, x: 0, width: 102, height: 110.5 }, image: 'link', delay: 5 },
+				{ rect: { y: 664, x: 102, width: 102, height: 110.5 }, image: 'link', delay: 5 },
+				{ rect: { y: 664, x: 204, width: 102, height: 110.5 }, image: 'link', delay: 5 },
+				{ rect: { y: 664, x: 306, width: 102, height: 110.5 }, image: 'link', delay: 5 },
+				{ rect: { y: 664, x: 408, width: 102, height: 110.5 }, image: 'link', delay: 5 },
+				{ rect: { y: 664, x: 510, width: 102, height: 110.5 }, image: 'link', delay: 5 },
+				{ rect: { y: 664, x: 612, width: 102, height: 110.5 }, image: 'link', delay: 5 },
+				{ rect: { y: 664, x: 714, width: 102, height: 110.5 }, image: 'link', delay: 5 },
+				{ rect: { y: 664, x: 816, width: 102, height: 110.5 }, image: 'link', delay: 5 },
+				{ rect: { y: 664, x: 918, width: 102, height: 110.5 }, image: 'link', delay: 5 }
+			]
+		}, {
+			default: false,
+			name: "run-left",
+			frames: [
+				{ rect: { y: 553.5, x: 0, width: 102, height: 110.5 }, image: 'link', delay: 5 },
+				{ rect: { y: 553.5, x: 102, width: 102, height: 110.5 }, image: 'link', delay: 5 },
+				{ rect: { y: 553.5, x: 204, width: 102, height: 110.5 }, image: 'link', delay: 5 },
+				{ rect: { y: 553.5, x: 306, width: 102, height: 110.5 }, image: 'link', delay: 5 },
+				{ rect: { y: 553.5, x: 408, width: 102, height: 110.5 }, image: 'link', delay: 5 },
+				{ rect: { y: 553.5, x: 510, width: 102, height: 110.5 }, image: 'link', delay: 5 },
+				{ rect: { y: 553.5, x: 612, width: 102, height: 110.5 }, image: 'link', delay: 5 },
+				{ rect: { y: 553.5, x: 714, width: 102, height: 110.5 }, image: 'link', delay: 5 },
+				{ rect: { y: 553.5, x: 816, width: 102, height: 110.5 }, image: 'link', delay: 5 },
+				{ rect: { y: 553.5, x: 918, width: 102, height: 110.5 }, image: 'link', delay: 5 }
+			]
+		}, {
+			default: false,
+			name: "run-right",
 			frames: [
 				{ rect: { y: 773.5, x: 0, width: 102, height: 110.5 }, image: 'link', delay: 5 },
 				{ rect: { y: 773.5, x: 102, width: 102, height: 110.5 }, image: 'link', delay: 5 },

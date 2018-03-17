@@ -1,9 +1,10 @@
 const path = require('path');
 const webpack = require('webpack');
+const UglifyJSPlugin = require('uglifyjs-webpack-plugin');
 
-module.exports = {
+const webpackConfig = {
 	entry: './src/index.ts',
-	devtool: 'cheap-eval-source-map',
+	devtool: 'source-map',
 	devServer: {
 		contentBase: path.join(__dirname, "dist"),
 		port: 9000,
@@ -25,7 +26,17 @@ module.exports = {
 		filename: 'bundle.js',
 		path: path.resolve(__dirname, 'dist')
 	},
-	plugins: [
-		new webpack.HotModuleReplacementPlugin()
-	]
+	plugins: [ ]
 };
+
+// TODO: Melhorar isso jaja
+// if (process.env.NODE_ENV === 'production') {
+// 	webpackConfig.plugins.push(
+// 		new UglifyJsPlugin()
+// 	)
+// } else
+if (process.env.NODE_ENV === 'development') {
+	webpackConfig.plugins.push(new webpack.HotModuleReplacementPlugin());
+}
+
+module.exports = webpackConfig;
