@@ -64,8 +64,9 @@ export class TileMapLayer extends GameComponent {
 
 					//no canvas
 					(col  * this.tileSize) - sumPosX, (row * this.tileSize) - sumPosY,
-					this.tileSize, this.tileSize);
-				}
+					this.tileSize, this.tileSize
+				);
 			}
 		}
 	}
+}

@@ -12,6 +12,7 @@ interface SpriteProperty {
 
 export class Sprite extends Component {
 
+	// Implementar ainda
 	public flip: { x: boolean, y: boolean } = {
 		x: false,
 		y: false
