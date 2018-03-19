@@ -13,132 +13,6 @@ export class Player extends GameComponent {
 	private cFollow: CameraFollow;
 	private animation: Animation;
 
-	// tirar daqui depois
-	// Megaman
-	// states: Array<AnimationState> = [
-	// 	{
-	// 		default: true,
-	// 		name: "idle",
-	// 		frames: [
-	// 			{ rect: { y: 0, x: 0, width: 36, height: 36 }, image: 'megaman', delay: 7 },
-	// 			{ rect: { y: 0, x: 36, width: 36, height: 36 }, image: 'megaman', delay: 7 },
-	// 			{ rect: { y: 0, x: 72, width: 36, height: 36 }, image: 'megaman', delay: 7 },
-	// 			{ rect: { y: 0, x: 108, width: 36, height: 36 }, image: 'megaman', delay: 7 }
-	// 		]
-	// 	}, {
-	// 		default: false,
-	// 		name: "run",
-	// 		frames: [
-	// 			{ rect: { y: 35, x: 0, width: 36, height: 36 }, image: 'megaman', delay: 7 },
-	// 			{ rect: { y: 35, x: 36, width: 36, height: 36 }, image: 'megaman', delay: 7 },
-	// 			{ rect: { y: 35, x: 72, width: 36, height: 36 }, image: 'megaman', delay: 7 },
-	// 			{ rect: { y: 35, x: 108, width: 36, height: 36 }, image: 'megaman', delay: 7 },
-	// 			{ rect: { y: 35, x: 144, width: 36, height: 36 }, image: 'megaman', delay: 7 },
-	// 			{ rect: { y: 35, x: 180, width: 36, height: 36 }, image: 'megaman', delay: 7 },
-	// 			{ rect: { y: 35, x: 216, width: 36, height: 36 }, image: 'megaman', delay: 7 }
-	// 		]
-	// 	}
-	// ];
-	//link
-	states: Array<AnimationState> = [
-		{
-			default: true,
-			name: "idle-down",
-			frames: [
-				{ rect: { y: 0, x: 0, width: 102, height: 110.5 }, image: 'link', delay: 100 },
-				{ rect: { y: 0, x: 102, width: 102, height: 110.5 }, image: 'link', delay: 5 },
-				{ rect: { y: 0, x: 204, width: 102, height: 110.5 }, image: 'link', delay: 5 }
-			]
-		},
-		{
-			default: false,
-			name: "idle-left",
-			frames: [
-				{ rect: { y: 111.5, x: 0, width: 102, height: 110.5 }, image: 'link', delay: 100 },
-				{ rect: { y: 111.5, x: 102, width: 102, height: 110.5 }, image: 'link', delay: 5 },
-				{ rect: { y: 111.5, x: 204, width: 102, height: 110.5 }, image: 'link', delay: 5 }
-			]
-		},
-		{
-			default: false,
-			name: "idle-up",
-			frames: [
-				{ rect: { y: 221, x: 0, width: 102, height: 110.5 }, image: 'link', delay: 100 },
-			]
-		},
-		{
-			default: false,
-			name: "idle-right",
-			frames: [
-				{ rect: { y: 332.5, x: 0, width: 102, height: 110.5 }, image: 'link', delay: 100 },
-				{ rect: { y: 332.5, x: 98, width: 102, height: 110.5 }, image: 'link', delay: 5 },
-				{ rect: { y: 332.5, x: 204, width: 102, height: 110.5 }, image: 'link', delay: 5 }
-			]
-		},
-
-		{
-			default: false,
-			name: "run-down",
-			frames: [
-				{ rect: { y: 443, x: 0, width: 102, height: 110.5 }, image: 'link', delay: 5 },
-				{ rect: { y: 443, x: 102, width: 102, height: 110.5 }, image: 'link', delay: 5 },
-				{ rect: { y: 443, x: 204, width: 102, height: 110.5 }, image: 'link', delay: 5 },
-				{ rect: { y: 443, x: 306, width: 102, height: 110.5 }, image: 'link', delay: 5 },
-				{ rect: { y: 443, x: 408, width: 102, height: 110.5 }, image: 'link', delay: 5 },
-				{ rect: { y: 443, x: 510, width: 102, height: 110.5 }, image: 'link', delay: 5 },
-				{ rect: { y: 443, x: 612, width: 102, height: 110.5 }, image: 'link', delay: 5 },
-				{ rect: { y: 443, x: 714, width: 102, height: 110.5 }, image: 'link', delay: 5 },
-				{ rect: { y: 443, x: 816, width: 102, height: 110.5 }, image: 'link', delay: 5 },
-				{ rect: { y: 443, x: 918, width: 102, height: 110.5 }, image: 'link', delay: 5 }
-			]
-		}, {
-			default: false,
-			name: "run-up",
-			frames: [
-				{ rect: { y: 664, x: 0, width: 102, height: 110.5 }, image: 'link', delay: 5 },
-				{ rect: { y: 664, x: 102, width: 102, height: 110.5 }, image: 'link', delay: 5 },
-				{ rect: { y: 664, x: 204, width: 102, height: 110.5 }, image: 'link', delay: 5 },
-				{ rect: { y: 664, x: 306, width: 102, height: 110.5 }, image: 'link', delay: 5 },
-				{ rect: { y: 664, x: 408, width: 102, height: 110.5 }, image: 'link', delay: 5 },
-				{ rect: { y: 664, x: 510, width: 102, height: 110.5 }, image: 'link', delay: 5 },
-				{ rect: { y: 664, x: 612, width: 102, height: 110.5 }, image: 'link', delay: 5 },
-				{ rect: { y: 664, x: 714, width: 102, height: 110.5 }, image: 'link', delay: 5 },
-				{ rect: { y: 664, x: 816, width: 102, height: 110.5 }, image: 'link', delay: 5 },
-				{ rect: { y: 664, x: 918, width: 102, height: 110.5 }, image: 'link', delay: 5 }
-			]
-		}, {
-			default: false,
-			name: "run-left",
-			frames: [
-				{ rect: { y: 553.5, x: 0, width: 102, height: 110.5 }, image: 'link', delay: 5 },
-				{ rect: { y: 553.5, x: 102, width: 102, height: 110.5 }, image: 'link', delay: 5 },
-				{ rect: { y: 553.5, x: 204, width: 102, height: 110.5 }, image: 'link', delay: 5 },
-				{ rect: { y: 553.5, x: 306, width: 102, height: 110.5 }, image: 'link', delay: 5 },
-				{ rect: { y: 553.5, x: 408, width: 102, height: 110.5 }, image: 'link', delay: 5 },
-				{ rect: { y: 553.5, x: 510, width: 102, height: 110.5 }, image: 'link', delay: 5 },
-				{ rect: { y: 553.5, x: 612, width: 102, height: 110.5 }, image: 'link', delay: 5 },
-				{ rect: { y: 553.5, x: 714, width: 102, height: 110.5 }, image: 'link', delay: 5 },
-				{ rect: { y: 553.5, x: 816, width: 102, height: 110.5 }, image: 'link', delay: 5 },
-				{ rect: { y: 553.5, x: 918, width: 102, height: 110.5 }, image: 'link', delay: 5 }
-			]
-		}, {
-			default: false,
-			name: "run-right",
-			frames: [
-				{ rect: { y: 773.5, x: 0, width: 102, height: 110.5 }, image: 'link', delay: 5 },
-				{ rect: { y: 773.5, x: 102, width: 102, height: 110.5 }, image: 'link', delay: 5 },
-				{ rect: { y: 773.5, x: 204, width: 102, height: 110.5 }, image: 'link', delay: 5 },
-				{ rect: { y: 773.5, x: 306, width: 102, height: 110.5 }, image: 'link', delay: 5 },
-				{ rect: { y: 773.5, x: 408, width: 102, height: 110.5 }, image: 'link', delay: 5 },
-				{ rect: { y: 773.5, x: 510, width: 102, height: 110.5 }, image: 'link', delay: 5 },
-				{ rect: { y: 773.5, x: 612, width: 102, height: 110.5 }, image: 'link', delay: 5 },
-				{ rect: { y: 773.5, x: 714, width: 102, height: 110.5 }, image: 'link', delay: 5 },
-				{ rect: { y: 773.5, x: 816, width: 102, height: 110.5 }, image: 'link', delay: 5 },
-				{ rect: { y: 773.5, x: 918, width: 102, height: 110.5 }, image: 'link', delay: 5 }
-			]
-		}
-	];
-
 	constructor(public transform: Transform, public layer: number) {
 		super(transform);
 	}
@@ -147,8 +21,6 @@ export class Player extends GameComponent {
 		this.spriteComponent = this.getComponent("Sprite") as Sprite;
 		this.cFollow = Camera.instance.getComponent("CameraFollow") as CameraFollow;
 		this.animation = this.getComponent("Animation") as Animation;
-
-		this.animation.animationStates = this.states;
 	}
 
 	Update() {
@@ -176,8 +48,6 @@ export class Player extends GameComponent {
 
 			destRect.x, destRect.y,
 			destRect.width, destRect.height
-		)
-
-		// console.log(srcRect, destRect)
+		);
 	}
 }
