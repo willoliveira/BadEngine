@@ -331,6 +331,8 @@ let GameComponentsHierarchy = [];
 let components;
 let camera = new Camera_1.Camera(new Transform_1.Transform(1 * tileSize, 1 * tileSize, 12 * tileSize, 12 * tileSize));
 let player;
+let velocity = 5;
+let dir = { x: position_interface_1.Direction.Idle, y: position_interface_1.Direction.Idle };
 gameEngine.canvas.width = camera.transform.width;
 gameEngine.canvas.height = camera.transform.height;
 //Carrega os resources do game
@@ -340,13 +342,141 @@ Resources_1.LoadResources(Resources, (files) => {
     imageBlank.src = "/assets/blank.png";
     let tileMap = new TileMap_1.TileMap(files.tileSet.file, 64, mapLayers, mapCollisions, files.blankImage.file);
     tileMap.Awake();
+    // Player
     player = new Player_1.Player(new Transform_1.Transform(1 * tileSize, 1 * tileSize, tileSize, tileSize), 1);
     let spritePlayer = new Sprite_1.Sprite(files.blankImage.file);
     spritePlayer.layer = 0;
     spritePlayer.orderInLayer = 1;
+    let animationPlayer = new Animation_1.Animation();
+    //#region Animacao megaman
+    // Megaman
+    // states: Array<AnimationState> = [
+    // 	{
+    // 		default: true,
+    // 		name: "idle",
+    // 		frames: [
+    // 			{ rect: { y: 0, x: 0, width: 36, height: 36 }, image: 'megaman', delay: 7 },
+    // 			{ rect: { y: 0, x: 36, width: 36, height: 36 }, image: 'megaman', delay: 7 },
+    // 			{ rect: { y: 0, x: 72, width: 36, height: 36 }, image: 'megaman', delay: 7 },
+    // 			{ rect: { y: 0, x: 108, width: 36, height: 36 }, image: 'megaman', delay: 7 }
+    // 		]
+    // 	}, {
+    // 		default: false,
+    // 		name: "run",
+    // 		frames: [
+    // 			{ rect: { y: 35, x: 0, width: 36, height: 36 }, image: 'megaman', delay: 7 },
+    // 			{ rect: { y: 35, x: 36, width: 36, height: 36 }, image: 'megaman', delay: 7 },
+    // 			{ rect: { y: 35, x: 72, width: 36, height: 36 }, image: 'megaman', delay: 7 },
+    // 			{ rect: { y: 35, x: 108, width: 36, height: 36 }, image: 'megaman', delay: 7 },
+    // 			{ rect: { y: 35, x: 144, width: 36, height: 36 }, image: 'megaman', delay: 7 },
+    // 			{ rect: { y: 35, x: 180, width: 36, height: 36 }, image: 'megaman', delay: 7 },
+    // 			{ rect: { y: 35, x: 216, width: 36, height: 36 }, image: 'megaman', delay: 7 }
+    // 		]
+    // 	}
+    // ];
+    //#endregion
+    let states = [
+        {
+            default: true,
+            name: "idle-down",
+            frames: [
+                { rect: { y: 0, x: 0, width: 102, height: 110.5 }, image: 'link', delay: 100 },
+                { rect: { y: 0, x: 102, width: 102, height: 110.5 }, image: 'link', delay: 5 },
+                { rect: { y: 0, x: 204, width: 102, height: 110.5 }, image: 'link', delay: 5 }
+            ]
+        },
+        {
+            default: false,
+            name: "idle-left",
+            frames: [
+                { rect: { y: 111.5, x: 0, width: 102, height: 110.5 }, image: 'link', delay: 100 },
+                { rect: { y: 111.5, x: 102, width: 102, height: 110.5 }, image: 'link', delay: 5 },
+                { rect: { y: 111.5, x: 204, width: 102, height: 110.5 }, image: 'link', delay: 5 }
+            ]
+        },
+        {
+            default: false,
+            name: "idle-up",
+            frames: [
+                { rect: { y: 221, x: 0, width: 102, height: 110.5 }, image: 'link', delay: 100 },
+            ]
+        },
+        {
+            default: false,
+            name: "idle-right",
+            frames: [
+                { rect: { y: 332.5, x: 0, width: 102, height: 110.5 }, image: 'link', delay: 100 },
+                { rect: { y: 332.5, x: 98, width: 102, height: 110.5 }, image: 'link', delay: 5 },
+                { rect: { y: 332.5, x: 204, width: 102, height: 110.5 }, image: 'link', delay: 5 }
+            ]
+        },
+        {
+            default: false,
+            name: "run-down",
+            frames: [
+                { rect: { y: 443, x: 0, width: 102, height: 110.5 }, image: 'link', delay: 5 },
+                { rect: { y: 443, x: 102, width: 102, height: 110.5 }, image: 'link', delay: 5 },
+                { rect: { y: 443, x: 204, width: 102, height: 110.5 }, image: 'link', delay: 5 },
+                { rect: { y: 443, x: 306, width: 102, height: 110.5 }, image: 'link', delay: 5 },
+                { rect: { y: 443, x: 408, width: 102, height: 110.5 }, image: 'link', delay: 5 },
+                { rect: { y: 443, x: 510, width: 102, height: 110.5 }, image: 'link', delay: 5 },
+                { rect: { y: 443, x: 612, width: 102, height: 110.5 }, image: 'link', delay: 5 },
+                { rect: { y: 443, x: 714, width: 102, height: 110.5 }, image: 'link', delay: 5 },
+                { rect: { y: 443, x: 816, width: 102, height: 110.5 }, image: 'link', delay: 5 },
+                { rect: { y: 443, x: 918, width: 102, height: 110.5 }, image: 'link', delay: 5 }
+            ]
+        }, {
+            default: false,
+            name: "run-up",
+            frames: [
+                { rect: { y: 664, x: 0, width: 102, height: 110.5 }, image: 'link', delay: 5 },
+                { rect: { y: 664, x: 102, width: 102, height: 110.5 }, image: 'link', delay: 5 },
+                { rect: { y: 664, x: 204, width: 102, height: 110.5 }, image: 'link', delay: 5 },
+                { rect: { y: 664, x: 306, width: 102, height: 110.5 }, image: 'link', delay: 5 },
+                { rect: { y: 664, x: 408, width: 102, height: 110.5 }, image: 'link', delay: 5 },
+                { rect: { y: 664, x: 510, width: 102, height: 110.5 }, image: 'link', delay: 5 },
+                { rect: { y: 664, x: 612, width: 102, height: 110.5 }, image: 'link', delay: 5 },
+                { rect: { y: 664, x: 714, width: 102, height: 110.5 }, image: 'link', delay: 5 },
+                { rect: { y: 664, x: 816, width: 102, height: 110.5 }, image: 'link', delay: 5 },
+                { rect: { y: 664, x: 918, width: 102, height: 110.5 }, image: 'link', delay: 5 }
+            ]
+        }, {
+            default: false,
+            name: "run-left",
+            frames: [
+                { rect: { y: 553.5, x: 0, width: 102, height: 110.5 }, image: 'link', delay: 5 },
+                { rect: { y: 553.5, x: 102, width: 102, height: 110.5 }, image: 'link', delay: 5 },
+                { rect: { y: 553.5, x: 204, width: 102, height: 110.5 }, image: 'link', delay: 5 },
+                { rect: { y: 553.5, x: 306, width: 102, height: 110.5 }, image: 'link', delay: 5 },
+                { rect: { y: 553.5, x: 408, width: 102, height: 110.5 }, image: 'link', delay: 5 },
+                { rect: { y: 553.5, x: 510, width: 102, height: 110.5 }, image: 'link', delay: 5 },
+                { rect: { y: 553.5, x: 612, width: 102, height: 110.5 }, image: 'link', delay: 5 },
+                { rect: { y: 553.5, x: 714, width: 102, height: 110.5 }, image: 'link', delay: 5 },
+                { rect: { y: 553.5, x: 816, width: 102, height: 110.5 }, image: 'link', delay: 5 },
+                { rect: { y: 553.5, x: 918, width: 102, height: 110.5 }, image: 'link', delay: 5 }
+            ]
+        }, {
+            default: false,
+            name: "run-right",
+            frames: [
+                { rect: { y: 773.5, x: 0, width: 102, height: 110.5 }, image: 'link', delay: 5 },
+                { rect: { y: 773.5, x: 102, width: 102, height: 110.5 }, image: 'link', delay: 5 },
+                { rect: { y: 773.5, x: 204, width: 102, height: 110.5 }, image: 'link', delay: 5 },
+                { rect: { y: 773.5, x: 306, width: 102, height: 110.5 }, image: 'link', delay: 5 },
+                { rect: { y: 773.5, x: 408, width: 102, height: 110.5 }, image: 'link', delay: 5 },
+                { rect: { y: 773.5, x: 510, width: 102, height: 110.5 }, image: 'link', delay: 5 },
+                { rect: { y: 773.5, x: 612, width: 102, height: 110.5 }, image: 'link', delay: 5 },
+                { rect: { y: 773.5, x: 714, width: 102, height: 110.5 }, image: 'link', delay: 5 },
+                { rect: { y: 773.5, x: 816, width: 102, height: 110.5 }, image: 'link', delay: 5 },
+                { rect: { y: 773.5, x: 918, width: 102, height: 110.5 }, image: 'link', delay: 5 }
+            ]
+        }
+    ];
+    animationPlayer.animationStates = states;
     player.addComponent(spritePlayer);
-    player.addComponent(new Animation_1.Animation());
+    player.addComponent(animationPlayer);
     player.Awake();
+    // Player
     //Adicionando o target na CameraFollow
     camera.addComponent(new CameraFollow_1.CameraFollow(camera.transform, player));
     camera.Awake();
@@ -354,11 +484,11 @@ Resources_1.LoadResources(Resources, (files) => {
     GameComponentsHierarchy.push(camera, tileMap, player);
     components = GameComponentsHierarchy.reduce((before, current) => {
         before.push(current);
-        if (current.components && current.components.length)
+        if (current.components && current.components.length) {
             before = before.concat(current.components);
+        }
         return before;
     }, []);
-    console.log(components);
     components.forEach((c) => { c.Awake(); }); // Testar isso também
     init();
 });
@@ -370,6 +500,19 @@ function init() {
     });
 }
 function GameLoop() {
+    // const gamePads = navigator.getGamepads()
+    // if (gamePads.length) {
+    // 	/**
+    // 	 * Axes Left Horizontal (negativo esquerda, positivo direita),
+    // 	 * Axes Left Vertical (negativo esquerda, positivo direita),
+    // 	 * Axes Right Horizontal (negativo esquerda, positivo direita),
+    // 	 * Axes Right Vertical (negativo esquerda, positivo direita),
+    // 	 * axes [0, 0, 0, 0]
+    // 	 */
+    // 	dir.x = gamePads[0].axes[0];
+    // 	dir.y = gamePads[0].axes[1];
+    // }
+    onMoveTo(dir);
     components.forEach((c) => { c.FixedUpdate(); });
     components.forEach((c) => { c.Update(); });
     /**
@@ -404,15 +547,14 @@ function GameLoop() {
     })
         .forEach((c) => { c.OnRender(); });
 }
-let movementDirection;
 function onMoveTo(pos) {
-    let positionRequest = {
-        x: Math.floor((player.transform.x + pos.x) / 64),
-        y: Math.floor((player.transform.y + pos.y) / 64)
-    };
+    // let positionRequest: Position = {
+    // 	x: Math.floor((player.transform.x + pos.x) /64),
+    // 	y: Math.floor((player.transform.y + pos.y) /64)
+    // };
     // if (!hasCollision(positionRequest)) {
-    player.transform.x += pos.x;
-    player.transform.y += pos.y;
+    player.transform.x += pos.x * velocity;
+    player.transform.y += pos.y * velocity;
     // }
     // console.log(player.transform)
 }
@@ -427,8 +569,8 @@ function hasCollision(position) {
     }
     return false;
 }
-function onKeyPress(evt) {
-    let dir = { x: position_interface_1.Direction.Idle, y: position_interface_1.Direction.Idle };
+function onKeyDown(evt) {
+    dir = { x: position_interface_1.Direction.Idle, y: position_interface_1.Direction.Idle };
     const playerAnimation = player.getComponent("Animation");
     const playerSprite = player.getComponent("Sprite");
     //left
@@ -436,7 +578,7 @@ function onKeyPress(evt) {
         if (playerAnimation) {
             playerAnimation.setState("run-left");
         }
-        dir.x = -5;
+        dir.x = -1;
         playerSprite.flip.x = true;
     }
     //right
@@ -444,7 +586,7 @@ function onKeyPress(evt) {
         if (playerAnimation) {
             playerAnimation.setState("run-right");
         }
-        dir.x = 5;
+        dir.x = 1;
         playerSprite.flip.x = false;
     }
     //down
@@ -452,22 +594,21 @@ function onKeyPress(evt) {
         if (playerAnimation) {
             playerAnimation.setState("run-down");
         }
-        dir.y = 5;
+        dir.y = 1;
     }
     //up
     if (evt.keyCode === 38) {
         if (playerAnimation) {
             playerAnimation.setState("run-up");
         }
-        dir.y = -5;
+        dir.y = -1;
     }
-    movementDirection = dir;
-    onMoveTo(dir);
+    // onMoveTo(dir);
 }
 function onKeyUp() {
     const playerAnimation = player.getComponent("Animation");
     const playerSprite = player.getComponent("Sprite");
-    if (movementDirection.x === 0) {
+    if (dir.x === 0) {
         if (playerAnimation.currentState.name === "run-down") {
             playerAnimation.setState("idle-down");
         }
@@ -475,7 +616,7 @@ function onKeyUp() {
             playerAnimation.setState("idle-up");
         }
     }
-    else if (movementDirection.y === 0) {
+    else if (dir.y === 0) {
         if (playerAnimation.currentState.name === "run-right") {
             playerAnimation.setState("idle-right");
         }
@@ -483,9 +624,13 @@ function onKeyUp() {
             playerAnimation.setState("idle-left");
         }
     }
+    dir = { x: position_interface_1.Direction.Idle, y: position_interface_1.Direction.Idle };
 }
-window.addEventListener("keydown", onKeyPress);
+function onKeyGamePad() {
+}
+window.addEventListener("keydown", onKeyDown);
 window.addEventListener("keyup", onKeyUp);
+window.addEventListener('', onKeyGamePad);
 
 
 /***/ }),
@@ -503,136 +648,11 @@ class Player extends GameComponent_1.GameComponent {
         super(transform);
         this.transform = transform;
         this.layer = layer;
-        // tirar daqui depois
-        // Megaman
-        // states: Array<AnimationState> = [
-        // 	{
-        // 		default: true,
-        // 		name: "idle",
-        // 		frames: [
-        // 			{ rect: { y: 0, x: 0, width: 36, height: 36 }, image: 'megaman', delay: 7 },
-        // 			{ rect: { y: 0, x: 36, width: 36, height: 36 }, image: 'megaman', delay: 7 },
-        // 			{ rect: { y: 0, x: 72, width: 36, height: 36 }, image: 'megaman', delay: 7 },
-        // 			{ rect: { y: 0, x: 108, width: 36, height: 36 }, image: 'megaman', delay: 7 }
-        // 		]
-        // 	}, {
-        // 		default: false,
-        // 		name: "run",
-        // 		frames: [
-        // 			{ rect: { y: 35, x: 0, width: 36, height: 36 }, image: 'megaman', delay: 7 },
-        // 			{ rect: { y: 35, x: 36, width: 36, height: 36 }, image: 'megaman', delay: 7 },
-        // 			{ rect: { y: 35, x: 72, width: 36, height: 36 }, image: 'megaman', delay: 7 },
-        // 			{ rect: { y: 35, x: 108, width: 36, height: 36 }, image: 'megaman', delay: 7 },
-        // 			{ rect: { y: 35, x: 144, width: 36, height: 36 }, image: 'megaman', delay: 7 },
-        // 			{ rect: { y: 35, x: 180, width: 36, height: 36 }, image: 'megaman', delay: 7 },
-        // 			{ rect: { y: 35, x: 216, width: 36, height: 36 }, image: 'megaman', delay: 7 }
-        // 		]
-        // 	}
-        // ];
-        //link
-        this.states = [
-            {
-                default: true,
-                name: "idle-down",
-                frames: [
-                    { rect: { y: 0, x: 0, width: 102, height: 110.5 }, image: 'link', delay: 100 },
-                    { rect: { y: 0, x: 102, width: 102, height: 110.5 }, image: 'link', delay: 5 },
-                    { rect: { y: 0, x: 204, width: 102, height: 110.5 }, image: 'link', delay: 5 }
-                ]
-            },
-            {
-                default: false,
-                name: "idle-left",
-                frames: [
-                    { rect: { y: 111.5, x: 0, width: 102, height: 110.5 }, image: 'link', delay: 100 },
-                    { rect: { y: 111.5, x: 102, width: 102, height: 110.5 }, image: 'link', delay: 5 },
-                    { rect: { y: 111.5, x: 204, width: 102, height: 110.5 }, image: 'link', delay: 5 }
-                ]
-            },
-            {
-                default: false,
-                name: "idle-up",
-                frames: [
-                    { rect: { y: 221, x: 0, width: 102, height: 110.5 }, image: 'link', delay: 100 },
-                ]
-            },
-            {
-                default: false,
-                name: "idle-right",
-                frames: [
-                    { rect: { y: 332.5, x: 0, width: 102, height: 110.5 }, image: 'link', delay: 100 },
-                    { rect: { y: 332.5, x: 98, width: 102, height: 110.5 }, image: 'link', delay: 5 },
-                    { rect: { y: 332.5, x: 204, width: 102, height: 110.5 }, image: 'link', delay: 5 }
-                ]
-            },
-            {
-                default: false,
-                name: "run-down",
-                frames: [
-                    { rect: { y: 443, x: 0, width: 102, height: 110.5 }, image: 'link', delay: 5 },
-                    { rect: { y: 443, x: 102, width: 102, height: 110.5 }, image: 'link', delay: 5 },
-                    { rect: { y: 443, x: 204, width: 102, height: 110.5 }, image: 'link', delay: 5 },
-                    { rect: { y: 443, x: 306, width: 102, height: 110.5 }, image: 'link', delay: 5 },
-                    { rect: { y: 443, x: 408, width: 102, height: 110.5 }, image: 'link', delay: 5 },
-                    { rect: { y: 443, x: 510, width: 102, height: 110.5 }, image: 'link', delay: 5 },
-                    { rect: { y: 443, x: 612, width: 102, height: 110.5 }, image: 'link', delay: 5 },
-                    { rect: { y: 443, x: 714, width: 102, height: 110.5 }, image: 'link', delay: 5 },
-                    { rect: { y: 443, x: 816, width: 102, height: 110.5 }, image: 'link', delay: 5 },
-                    { rect: { y: 443, x: 918, width: 102, height: 110.5 }, image: 'link', delay: 5 }
-                ]
-            }, {
-                default: false,
-                name: "run-up",
-                frames: [
-                    { rect: { y: 664, x: 0, width: 102, height: 110.5 }, image: 'link', delay: 5 },
-                    { rect: { y: 664, x: 102, width: 102, height: 110.5 }, image: 'link', delay: 5 },
-                    { rect: { y: 664, x: 204, width: 102, height: 110.5 }, image: 'link', delay: 5 },
-                    { rect: { y: 664, x: 306, width: 102, height: 110.5 }, image: 'link', delay: 5 },
-                    { rect: { y: 664, x: 408, width: 102, height: 110.5 }, image: 'link', delay: 5 },
-                    { rect: { y: 664, x: 510, width: 102, height: 110.5 }, image: 'link', delay: 5 },
-                    { rect: { y: 664, x: 612, width: 102, height: 110.5 }, image: 'link', delay: 5 },
-                    { rect: { y: 664, x: 714, width: 102, height: 110.5 }, image: 'link', delay: 5 },
-                    { rect: { y: 664, x: 816, width: 102, height: 110.5 }, image: 'link', delay: 5 },
-                    { rect: { y: 664, x: 918, width: 102, height: 110.5 }, image: 'link', delay: 5 }
-                ]
-            }, {
-                default: false,
-                name: "run-left",
-                frames: [
-                    { rect: { y: 553.5, x: 0, width: 102, height: 110.5 }, image: 'link', delay: 5 },
-                    { rect: { y: 553.5, x: 102, width: 102, height: 110.5 }, image: 'link', delay: 5 },
-                    { rect: { y: 553.5, x: 204, width: 102, height: 110.5 }, image: 'link', delay: 5 },
-                    { rect: { y: 553.5, x: 306, width: 102, height: 110.5 }, image: 'link', delay: 5 },
-                    { rect: { y: 553.5, x: 408, width: 102, height: 110.5 }, image: 'link', delay: 5 },
-                    { rect: { y: 553.5, x: 510, width: 102, height: 110.5 }, image: 'link', delay: 5 },
-                    { rect: { y: 553.5, x: 612, width: 102, height: 110.5 }, image: 'link', delay: 5 },
-                    { rect: { y: 553.5, x: 714, width: 102, height: 110.5 }, image: 'link', delay: 5 },
-                    { rect: { y: 553.5, x: 816, width: 102, height: 110.5 }, image: 'link', delay: 5 },
-                    { rect: { y: 553.5, x: 918, width: 102, height: 110.5 }, image: 'link', delay: 5 }
-                ]
-            }, {
-                default: false,
-                name: "run-right",
-                frames: [
-                    { rect: { y: 773.5, x: 0, width: 102, height: 110.5 }, image: 'link', delay: 5 },
-                    { rect: { y: 773.5, x: 102, width: 102, height: 110.5 }, image: 'link', delay: 5 },
-                    { rect: { y: 773.5, x: 204, width: 102, height: 110.5 }, image: 'link', delay: 5 },
-                    { rect: { y: 773.5, x: 306, width: 102, height: 110.5 }, image: 'link', delay: 5 },
-                    { rect: { y: 773.5, x: 408, width: 102, height: 110.5 }, image: 'link', delay: 5 },
-                    { rect: { y: 773.5, x: 510, width: 102, height: 110.5 }, image: 'link', delay: 5 },
-                    { rect: { y: 773.5, x: 612, width: 102, height: 110.5 }, image: 'link', delay: 5 },
-                    { rect: { y: 773.5, x: 714, width: 102, height: 110.5 }, image: 'link', delay: 5 },
-                    { rect: { y: 773.5, x: 816, width: 102, height: 110.5 }, image: 'link', delay: 5 },
-                    { rect: { y: 773.5, x: 918, width: 102, height: 110.5 }, image: 'link', delay: 5 }
-                ]
-            }
-        ];
     }
     Awake() {
         this.spriteComponent = this.getComponent("Sprite");
         this.cFollow = Camera_1.Camera.instance.getComponent("CameraFollow");
         this.animation = this.getComponent("Animation");
-        this.animation.animationStates = this.states;
     }
     Update() {
         this.spriteComponent.sprite.destRect = {
@@ -650,7 +670,6 @@ class Player extends GameComponent_1.GameComponent {
         let srcRect = this.spriteComponent.sprite.sourceRect;
         let destRect = this.spriteComponent.sprite.destRect;
         GameEngine_1.GameEngine.instance.context2D.drawImage(this.spriteComponent.sprite.image, srcRect.x, srcRect.y, srcRect.width, srcRect.height, destRect.x, destRect.y, destRect.width, destRect.height);
-        // console.log(srcRect, destRect)
     }
 }
 exports.Player = Player;

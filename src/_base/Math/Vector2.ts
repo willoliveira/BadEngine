@@ -26,7 +26,7 @@ export class Vector2 {
 		return Math.sqrt(this.x * this.x + this.y * this.y);
 	}
 
-	normalize() {
+	public normalize() {
 		const m: number = this.mag();
 		if (m !== 0) {
 			this.div(m);
@@ -39,4 +39,15 @@ export class Vector2 {
 			this.mult(max);
 		}
 	}
+
+	public fromAngle(angle: number, length?: number) {
+		if (typeof length === 'undefined') {
+			length = 1;
+		}
+		return new Vector2(length * Math.cos(angle), length * Math.sin(angle));
+	};
+
+	public random2D() {
+		return this.fromAngle(Math.random() * (Math.PI * 2));
+	};
 }
