@@ -3,6 +3,13 @@ import { Vector2 } from "../../../../src/_base/Math/Vector2";
 const mouse: Vector2 = new Vector2(0, 0);
 const offeset: Vector2 = new Vector2(0, 0);
 
+
+document.addEventListener("mousemove", function(evt) {
+	// deixando o (0, 0) no centro, ao inves do canto superior esquerdo, para os testes sairem certo;
+	mouse.x = evt.x + window.scrollX - offeset.x;
+	mouse.y = evt.y + window.scrollY - offeset.y;
+});
+
 /**
 * Exemplo 1.3: subtração vetorial
 */
@@ -24,7 +31,7 @@ canvasVectorSub.addEventListener('mousemove', function(evt) {
 	ctxVectorSub.moveTo(canvasVectorSub.width / 2, canvasVectorSub.height / 2);
 	ctxVectorSub.lineTo(center.x + mouse.x, center.y + mouse.y);
 	ctxVectorSub.stroke();
-})
+});
 
 
 /**
@@ -99,11 +106,7 @@ canvasVectorNormalize.addEventListener('mousemove', function(evt) {
 	ctxVectorNormalize.stroke();
 })
 
-document.addEventListener("mousemove", function(evt) {
-	// deixando o (0, 0) no centro, ao inves do canto superior esquerdo, para os testes sairem certo;
-	mouse.x = evt.x + window.scrollX - offeset.x;
-	mouse.y = evt.y + window.scrollY - offeset.y;
-});
+
 
 
 
@@ -226,15 +229,17 @@ const ctxCar = canvasCar.getContext("2d");
 	update() {
 		if (!this.isAccelerating) {
 			// TODO: Aqui ta errado se pa
-			// if (this.velocity.x < 0 && this.velocity.x < this.topspeed ||
-			// 	this.velocity.x > 0 && this.velocity.x > this.topspeed) {
-				this.velocity = new Vector2(0, 0);
-			// } else {
-			// 	this.velocity.sub(this.acceleration);
-			// }
+			if (this.velocity.x !== 0) {
+				if (this.velocity.x < 0) {
+					this.velocity.add(this.acceleration);
+				} else if (this.velocity.x > 0) {
+					this.velocity.sub(this.acceleration);
+				}
+			}
 		}
 
 		this.location.add(this.velocity);
+		this.velocity.limit(this.topspeed);
 	}
 
 	onKeyDown(evt: KeyboardEvent) {
@@ -248,7 +253,6 @@ const ctxCar = canvasCar.getContext("2d");
 			this.velocity.add(this.acceleration);
 		}
 
-		this.velocity.limit(this.topspeed);
 	}
 
 	onKeyUp() {

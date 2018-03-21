@@ -17,13 +17,15 @@ import { TileMap } from "./Tile/TileMap";
 import { ResourceItem, LoadResources } from "./_base/Resources";
 import { Animation, AnimationState } from "./Animation/Animation";
 
+import KeyboardInput from './Events/KeyboardInput'
+
 const gameEngine: GameEngine = new GameEngine("stage");
 
 const Resources: Array<ResourceItem> = [
 	{ name: "blankImage", url: "/assets/blank.png", type: 'image' },
 	{ name: "tileSet", url: "/assets/tiles.png", type: 'image' },
 	{ name: "megaman", url: "/assets/megaman.png", type: 'image' },
-	{ name: "link", url: "/assets/link/zelda-link.png", type: 'image' },
+	{ name: "link", url: "/assets/link/zelda-link.png", type: 'image' }
 ];
 
 let tileSize = 64;
@@ -262,7 +264,7 @@ function init() {
 	setInterval(GameLoop, 1000 / gameEngine.FPS);
 
 	document.getElementById("limitBorder").addEventListener("change", (event:any) => {
-		var cFollow: CameraFollow = camera.getComponent('CameraFollow') as CameraFollow;
+		var cFollow: CameraFollow = camera.getComponent(CameraFollow) as CameraFollow;
 		cFollow.limitBorder = event.target.checked ? { width: mapLayers[0][0].length * 64, height: mapLayers[0].length * 64 } : null;
 	});
 }
@@ -281,7 +283,7 @@ function GameLoop() {
 	// 	dir.x = gamePads[0].axes[0];
 	// 	dir.y = gamePads[0].axes[1];
 	// }
-	onMoveTo(dir);
+	// onMoveTo(dir);
 
 	components.forEach((c:GameComponent) => { c.FixedUpdate(); });
 	components.forEach((c:GameComponent) => { c.Update(); });
@@ -297,14 +299,14 @@ function GameLoop() {
 	components
 		.filter((c:GameComponent) => {
 			if (!c.getComponent) return false;
-			let sprite: Sprite = c.getComponent("Sprite") as Sprite;
+			let sprite: Sprite = c.getComponent(Sprite) as Sprite;
 			return sprite;
 		})
 		.sort((a, b) => {
 			let aSprite, bSprite: Sprite;
 
-			aSprite = a.getComponent("Sprite") as Sprite;
-			bSprite = b.getComponent("Sprite") as Sprite;
+			aSprite = a.getComponent(Sprite) as Sprite;
+			bSprite = b.getComponent(Sprite) as Sprite;
 
 			if (aSprite.layer > bSprite.layer) return 1
 			else if (aSprite.layer < bSprite.layer) return -1
@@ -343,44 +345,44 @@ function hasCollision(position: Position) {
 
 function onKeyDown(evt: any) {
 	dir = { x: Direction.Idle, y: Direction.Idle };
-	const playerAnimation = player.getComponent("Animation") as Animation;
-	const playerSprite = player.getComponent("Sprite") as Sprite;
+	const playerAnimation = player.getComponent(Animation) as Animation;
+	const playerSprite = player.getComponent(Sprite) as Sprite;
 	//left
 	if (evt.keyCode === 37) {
-		if (playerAnimation) {
-			playerAnimation.setState("run-left");
-		}
+		// if (playerAnimation) {
+		// 	playerAnimation.setState("run-left");
+		// }
 		dir.x = -1;
 		playerSprite.flip.x = true;
 	}
 	//right
 	if (evt.keyCode === 39) {
-		if (playerAnimation) {
-			playerAnimation.setState("run-right");
-		}
+		// if (playerAnimation) {
+		// 	playerAnimation.setState("run-right");
+		// }
 		dir.x = 1;
 		playerSprite.flip.x = false;
 	}
 	//down
 	if (evt.keyCode === 40) {
-		if (playerAnimation) {
-			playerAnimation.setState("run-down");
-		}
+		// if (playerAnimation) {
+		// 	playerAnimation.setState("run-down");
+		// }
 		dir.y = 1;
 	}
 	//up
 	if (evt.keyCode === 38) {
-		if (playerAnimation) {
-			playerAnimation.setState("run-up");
-		}
+		// if (playerAnimation) {
+		// 	playerAnimation.setState("run-up");
+		// }
 		dir.y = -1;
 	}
 	// onMoveTo(dir);
 }
 
 function onKeyUp() {
-	const playerAnimation = player.getComponent("Animation") as Animation;
-	const playerSprite = player.getComponent("Sprite") as Sprite;
+	const playerAnimation = player.getComponent(Animation) as Animation;
+	const playerSprite = player.getComponent(Sprite) as Sprite;
 
 	if (dir.x === 0) {
 		if (playerAnimation.currentState.name === "run-down") {
