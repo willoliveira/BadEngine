@@ -318,30 +318,6 @@ function GameLoop() {
 		.forEach((c:GameComponent) => { c.OnRender(); });
 }
 
-function onMoveTo(pos: MovementDirection) {
-	// let positionRequest: Position = {
-	// 	x: Math.floor((player.transform.x + pos.x) /64),
-	// 	y: Math.floor((player.transform.y + pos.y) /64)
-	// };
-
-	// if (!hasCollision(positionRequest)) {
-		player.transform.x += pos.x * velocity;
-		player.transform.y += pos.y * velocity;
-	// }
-	// console.log(player.transform)
-}
-
-function hasCollision(position: Position) {
-	// Vai sair do mapa
-	if (position.y < 0 || position.y >= mapCollisions.length || position.x < 0 || position.x >= mapCollisions[0].length) {
-		return true;
-	}
-	// 1 é colisão
-	if (mapCollisions[position.y][position.x] === 1) {
-		return true;
-	}
-	return false
-}
 
 function onKeyDown(evt: any) {
 	dir = { x: Direction.Idle, y: Direction.Idle };
