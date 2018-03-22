@@ -2,8 +2,6 @@ const path = require('path');
 const webpack = require('webpack');
 const UglifyJSPlugin = require('uglifyjs-webpack-plugin');
 
-const env = process.env.NODE_ENV
-
 const webpackConfig = {
 	entry: './src/index.ts',
 	devtool: 'source-map',
@@ -31,7 +29,13 @@ const webpackConfig = {
 	plugins: [ ]
 };
 
-if (env === 'development') {
+// TODO: Melhorar isso jaja
+// if (process.env.NODE_ENV === 'production') {
+// 	webpackConfig.plugins.push(
+// 		new UglifyJsPlugin()
+// 	)
+// } else
+if (process.env.NODE_ENV === 'development') {
 	webpackConfig.plugins.push(new webpack.HotModuleReplacementPlugin());
 }
 

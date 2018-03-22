@@ -1,5 +1,8 @@
 import { Component } from '../_base/Component';
 import { GameEngine } from '../Engine/GameEngine';
+import { Camera } from '../Camera/Camera';
+import { Transform } from '../_base/Transform';
+import { GameComponent } from '../_base/GameComponent';
 
 //pensar em um nome
 interface SpriteProperty {
@@ -12,6 +15,8 @@ interface SpriteProperty {
 
 export class Sprite extends Component {
 
+	transform: any;
+	gameComponentCamera: any;
 	// Implementar ainda
 	public flip: { x: boolean, y: boolean } = {
 		x: false,
@@ -43,5 +48,35 @@ export class Sprite extends Component {
 
 		this.sprite.canvas.width = image.width;
 		this.sprite.canvas.height = image.height;
+	}
+
+	Awake() {
+		this.transform = this.parent.getComponent(Transform) as Transform;
+		this.gameComponentCamera = GameEngine.Camera.parent as GameComponent;
+	}
+
+	//TODO: Talvez tentar dar uma melhorada
+	Update() {
+		this.sprite.destRect = {
+			x: ((this.gameComponentCamera.transform.position.x * -1) + this.transform.position.x),
+			y: ((this.gameComponentCamera.transform.position.y * -1)  + this.transform.position.y),
+			width: 64,
+			height: 64
+		}
+	}
+
+	OnRender() {
+		let srcRect = this.sprite.sourceRect;
+		let destRect = this.sprite.destRect;
+
+		Camera.context2D.drawImage(
+			this.sprite.image,
+
+			srcRect.x, srcRect.y,
+			srcRect.width, srcRect.height,
+
+			destRect.x, destRect.y,
+			destRect.width, destRect.height
+		);
 	}
 }

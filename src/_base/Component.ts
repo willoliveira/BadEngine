@@ -3,7 +3,7 @@ import { GameComponent } from './GameComponent';
 
 export class Component {
 
-	public parent: GameComponent | Component;
+	public parent: GameComponent;
 
 	Awake() { }
 

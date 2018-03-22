@@ -1,12 +1,13 @@
 import { Component } from "./Component";
+import { Vector2 } from "./Math/Vector2";
 
 export class Transform extends Component{
 
-	constructor(
-		public x: number,
-		public y: number,
-		public width: number,
-		public height: number) {
+	public scale: Vector2 = new Vector2(1, 1);
+	public rotation: Vector2 = new Vector2(0, 0);
+	public position: Vector2 = new Vector2(0, 0);
+
+	constructor() {
 		super();
 	}
 

@@ -65,7 +65,7 @@ export class Animation extends Component {
 
 	Awake() {
 		let parent = this.parent as GameComponent;
-		this.spriteComponent = parent.getComponent("Sprite") as Sprite;
+		this.spriteComponent = parent.getComponent(Sprite) as Sprite;
 
 		this.setAnimationFrame();
 	}

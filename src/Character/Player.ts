@@ -1,4 +1,4 @@
-import { Position } from "../_base/interface/position.interface";
+import { Position, Direction } from "../_base/interface/position.interface";
 import { Transform } from "../_base/Transform";
 import { GameComponent } from "../_base/GameComponent";
 import { Sprite } from "../Sprite/Sprite";
@@ -6,178 +6,64 @@ import { Camera } from "../Camera/Camera";
 import { CameraFollow } from "../Camera/CameraFollow";
 import { GameEngine } from "../Engine/GameEngine";
 import { Animation, AnimationState } from "../Animation/Animation";
+import { KeyboardInput } from "../Events/KeyboardInput";
+import { Vector2 } from "../_base/Math/Vector2";
 
 export class Player extends GameComponent {
 
+	private velocity: Vector2 = new Vector2(5, 5);
+
 	private spriteComponent: Sprite;
-	private cFollow: CameraFollow;
+	private gameComponentCamera: GameComponent;
+	private cameraFollow: CameraFollow;
 	private animation: Animation;
-
-	// tirar daqui depois
-	// Megaman
-	// states: Array<AnimationState> = [
-	// 	{
-	// 		default: true,
-	// 		name: "idle",
-	// 		frames: [
-	// 			{ rect: { y: 0, x: 0, width: 36, height: 36 }, image: 'megaman', delay: 7 },
-	// 			{ rect: { y: 0, x: 36, width: 36, height: 36 }, image: 'megaman', delay: 7 },
-	// 			{ rect: { y: 0, x: 72, width: 36, height: 36 }, image: 'megaman', delay: 7 },
-	// 			{ rect: { y: 0, x: 108, width: 36, height: 36 }, image: 'megaman', delay: 7 }
-	// 		]
-	// 	}, {
-	// 		default: false,
-	// 		name: "run",
-	// 		frames: [
-	// 			{ rect: { y: 35, x: 0, width: 36, height: 36 }, image: 'megaman', delay: 7 },
-	// 			{ rect: { y: 35, x: 36, width: 36, height: 36 }, image: 'megaman', delay: 7 },
-	// 			{ rect: { y: 35, x: 72, width: 36, height: 36 }, image: 'megaman', delay: 7 },
-	// 			{ rect: { y: 35, x: 108, width: 36, height: 36 }, image: 'megaman', delay: 7 },
-	// 			{ rect: { y: 35, x: 144, width: 36, height: 36 }, image: 'megaman', delay: 7 },
-	// 			{ rect: { y: 35, x: 180, width: 36, height: 36 }, image: 'megaman', delay: 7 },
-	// 			{ rect: { y: 35, x: 216, width: 36, height: 36 }, image: 'megaman', delay: 7 }
-	// 		]
-	// 	}
-	// ];
-	//link
-	states: Array<AnimationState> = [
-		{
-			default: true,
-			name: "idle-down",
-			frames: [
-				{ rect: { y: 0, x: 0, width: 102, height: 110.5 }, image: 'link', delay: 100 },
-				{ rect: { y: 0, x: 102, width: 102, height: 110.5 }, image: 'link', delay: 5 },
-				{ rect: { y: 0, x: 204, width: 102, height: 110.5 }, image: 'link', delay: 5 }
-			]
-		},
-		{
-			default: false,
-			name: "idle-left",
-			frames: [
-				{ rect: { y: 111.5, x: 0, width: 102, height: 110.5 }, image: 'link', delay: 100 },
-				{ rect: { y: 111.5, x: 102, width: 102, height: 110.5 }, image: 'link', delay: 5 },
-				{ rect: { y: 111.5, x: 204, width: 102, height: 110.5 }, image: 'link', delay: 5 }
-			]
-		},
-		{
-			default: false,
-			name: "idle-up",
-			frames: [
-				{ rect: { y: 221, x: 0, width: 102, height: 110.5 }, image: 'link', delay: 100 },
-			]
-		},
-		{
-			default: false,
-			name: "idle-right",
-			frames: [
-				{ rect: { y: 332.5, x: 0, width: 102, height: 110.5 }, image: 'link', delay: 100 },
-				{ rect: { y: 332.5, x: 98, width: 102, height: 110.5 }, image: 'link', delay: 5 },
-				{ rect: { y: 332.5, x: 204, width: 102, height: 110.5 }, image: 'link', delay: 5 }
-			]
-		},
-
-		{
-			default: false,
-			name: "run-down",
-			frames: [
-				{ rect: { y: 443, x: 0, width: 102, height: 110.5 }, image: 'link', delay: 5 },
-				{ rect: { y: 443, x: 102, width: 102, height: 110.5 }, image: 'link', delay: 5 },
-				{ rect: { y: 443, x: 204, width: 102, height: 110.5 }, image: 'link', delay: 5 },
-				{ rect: { y: 443, x: 306, width: 102, height: 110.5 }, image: 'link', delay: 5 },
-				{ rect: { y: 443, x: 408, width: 102, height: 110.5 }, image: 'link', delay: 5 },
-				{ rect: { y: 443, x: 510, width: 102, height: 110.5 }, image: 'link', delay: 5 },
-				{ rect: { y: 443, x: 612, width: 102, height: 110.5 }, image: 'link', delay: 5 },
-				{ rect: { y: 443, x: 714, width: 102, height: 110.5 }, image: 'link', delay: 5 },
-				{ rect: { y: 443, x: 816, width: 102, height: 110.5 }, image: 'link', delay: 5 },
-				{ rect: { y: 443, x: 918, width: 102, height: 110.5 }, image: 'link', delay: 5 }
-			]
-		}, {
-			default: false,
-			name: "run-up",
-			frames: [
-				{ rect: { y: 664, x: 0, width: 102, height: 110.5 }, image: 'link', delay: 5 },
-				{ rect: { y: 664, x: 102, width: 102, height: 110.5 }, image: 'link', delay: 5 },
-				{ rect: { y: 664, x: 204, width: 102, height: 110.5 }, image: 'link', delay: 5 },
-				{ rect: { y: 664, x: 306, width: 102, height: 110.5 }, image: 'link', delay: 5 },
-				{ rect: { y: 664, x: 408, width: 102, height: 110.5 }, image: 'link', delay: 5 },
-				{ rect: { y: 664, x: 510, width: 102, height: 110.5 }, image: 'link', delay: 5 },
-				{ rect: { y: 664, x: 612, width: 102, height: 110.5 }, image: 'link', delay: 5 },
-				{ rect: { y: 664, x: 714, width: 102, height: 110.5 }, image: 'link', delay: 5 },
-				{ rect: { y: 664, x: 816, width: 102, height: 110.5 }, image: 'link', delay: 5 },
-				{ rect: { y: 664, x: 918, width: 102, height: 110.5 }, image: 'link', delay: 5 }
-			]
-		}, {
-			default: false,
-			name: "run-left",
-			frames: [
-				{ rect: { y: 553.5, x: 0, width: 102, height: 110.5 }, image: 'link', delay: 5 },
-				{ rect: { y: 553.5, x: 102, width: 102, height: 110.5 }, image: 'link', delay: 5 },
-				{ rect: { y: 553.5, x: 204, width: 102, height: 110.5 }, image: 'link', delay: 5 },
-				{ rect: { y: 553.5, x: 306, width: 102, height: 110.5 }, image: 'link', delay: 5 },
-				{ rect: { y: 553.5, x: 408, width: 102, height: 110.5 }, image: 'link', delay: 5 },
-				{ rect: { y: 553.5, x: 510, width: 102, height: 110.5 }, image: 'link', delay: 5 },
-				{ rect: { y: 553.5, x: 612, width: 102, height: 110.5 }, image: 'link', delay: 5 },
-				{ rect: { y: 553.5, x: 714, width: 102, height: 110.5 }, image: 'link', delay: 5 },
-				{ rect: { y: 553.5, x: 816, width: 102, height: 110.5 }, image: 'link', delay: 5 },
-				{ rect: { y: 553.5, x: 918, width: 102, height: 110.5 }, image: 'link', delay: 5 }
-			]
-		}, {
-			default: false,
-			name: "run-right",
-			frames: [
-				{ rect: { y: 773.5, x: 0, width: 102, height: 110.5 }, image: 'link', delay: 5 },
-				{ rect: { y: 773.5, x: 102, width: 102, height: 110.5 }, image: 'link', delay: 5 },
-				{ rect: { y: 773.5, x: 204, width: 102, height: 110.5 }, image: 'link', delay: 5 },
-				{ rect: { y: 773.5, x: 306, width: 102, height: 110.5 }, image: 'link', delay: 5 },
-				{ rect: { y: 773.5, x: 408, width: 102, height: 110.5 }, image: 'link', delay: 5 },
-				{ rect: { y: 773.5, x: 510, width: 102, height: 110.5 }, image: 'link', delay: 5 },
-				{ rect: { y: 773.5, x: 612, width: 102, height: 110.5 }, image: 'link', delay: 5 },
-				{ rect: { y: 773.5, x: 714, width: 102, height: 110.5 }, image: 'link', delay: 5 },
-				{ rect: { y: 773.5, x: 816, width: 102, height: 110.5 }, image: 'link', delay: 5 },
-				{ rect: { y: 773.5, x: 918, width: 102, height: 110.5 }, image: 'link', delay: 5 }
-			]
-		}
-	];
 
 	constructor(public transform: Transform, public layer: number) {
 		super(transform);
 	}
 
 	Awake() {
-		this.spriteComponent = this.getComponent("Sprite") as Sprite;
-		this.cFollow = Camera.instance.getComponent("CameraFollow") as CameraFollow;
-		this.animation = this.getComponent("Animation") as Animation;
-
-		this.animation.animationStates = this.states;
+		this.gameComponentCamera = GameEngine.Camera.parent as GameComponent
+		this.cameraFollow = this.gameComponentCamera.getComponent(CameraFollow) as CameraFollow;
+		this.spriteComponent = this.getComponent(Sprite) as Sprite;
+		this.animation = this.getComponent(Animation) as Animation;
 	}
 
-	Update() {
-		this.spriteComponent.sprite.destRect = {
-			x: ((Camera.instance.transform.x * -1) + this.cFollow.target.transform.x),
-			y: ((Camera.instance.transform.y * -1)  + this.cFollow.target.transform.y),
-			width: 64,
-			height: 64
+	FixedUpdate() {
+		const dir = { x: Direction.Idle, y: Direction.Idle };
+
+		if (KeyboardInput.GetKeyDown("ArrowLeft")) {
+			this.animation.setState("run-left");
+			dir.x = -1;
 		}
-	}
+		else if (KeyboardInput.GetKeyDown("ArrowRight")) {
+			this.animation.setState("run-right");
+			dir.x = 1;
+		}
 
-	/**
-	 * TODO: Tentar transferir essa logica para outro lugar
-	 * Sprite ou o base
-	 */
-	OnRender() {
-		let srcRect = this.spriteComponent.sprite.sourceRect;
-		let destRect = this.spriteComponent.sprite.destRect;
+		if (KeyboardInput.GetKeyDown("ArrowDown")) {
+			this.animation.setState("run-down");
+			dir.y = 1;
+		}
+		else if (KeyboardInput.GetKeyDown("ArrowUp")) {
+			this.animation.setState("run-up");
+			dir.y = -1;
+		}
 
-		GameEngine.instance.context2D.drawImage(
-			this.spriteComponent.sprite.image,
+		// if (KeyboardInput.GetKeyUp("ArrowDown")) {
+		// 	this.animation.setState("idle-down");
+		// } else if (KeyboardInput.GetKeyUp("ArrowUp")) {
+		// 	this.animation.setState("idle-up");
+		// }
 
-			srcRect.x, srcRect.y,
-			srcRect.width, srcRect.height,
+		// if (KeyboardInput.GetKeyUp("ArrowRight")) {
+		// 	this.animation.setState("idle-right");
+		// }
+		// else if (KeyboardInput.GetKeyUp("ArrowLeft")) {
+		// 	this.animation.setState("idle-left");
+		// }
 
-			destRect.x, destRect.y,
-			destRect.width, destRect.height
-		)
-
-		// console.log(srcRect, destRect)
+		this.transform.position.x += dir.x * this.velocity.x;
+		this.transform.position.y += dir.y * this.velocity.y;
 	}
 }
