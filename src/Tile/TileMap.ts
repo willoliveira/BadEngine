@@ -21,7 +21,7 @@ export class TileMap extends GameComponent {
 		public mapCollisions: Array<Array<number>>,
 		public blankImage: any // TODO: ficou ruim isso, depois rever
 	) {
-		super(new Transform(0, 0, 832, 832));
+		super(new Transform());
 	}
 
 	Awake() {

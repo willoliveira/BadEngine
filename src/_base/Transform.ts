@@ -3,15 +3,11 @@ import { Vector2 } from "./Math/Vector2";
 
 export class Transform extends Component{
 
-	public scale: Vector2;
-	public rotation: Vector2;
-	public position: Vector2;
+	public scale: Vector2 = new Vector2(1, 1);
+	public rotation: Vector2 = new Vector2(0, 0);
+	public position: Vector2 = new Vector2(0, 0);
 
-	constructor(
-		public x: number,
-		public y: number,
-		public width: number,
-		public height: number) {
+	constructor() {
 		super();
 	}
 

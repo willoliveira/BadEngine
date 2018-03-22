@@ -10,35 +10,40 @@ import { GameEngine } from "../Engine/GameEngine";
 */
 export class TileMapLayer extends GameComponent {
 
-	tileSet: Sprite;
+	private gameComponentCamera: GameComponent;
 
-	beforeX = 0;
-	currentX = 0;
+	tileSet: Sprite;
 
 	constructor(
 		public tileSize: number,
 		public mapLayers: Array<Array<number>>,
 		public blankImage: any // TODO: ficou ruim isso, depois rever
 	) {
-		super(new Transform(0, 0, 1 , 1));
+		super(new Transform());
 	}
 
 
 	Awake() {
+		this.gameComponentCamera = GameEngine.Camera.parent as GameComponent
+
 		this.tileSet = this.getComponent(Sprite) as Sprite;
 	}
 
+	/**
+	 * Trocar esse lance pra outra coisa...
+	 * Fazer só o sprite fazer render...
+	 */
 	OnRender() {
-		let rowLen = Math.floor(Camera.instance.transform.height/64);
-		let colLen = Math.floor(Camera.instance.transform.width/64);
+		let rowLen = Math.floor(GameEngine.Camera.viewportRect.height/64);
+		let colLen = Math.floor(GameEngine.Camera.viewportRect.width/64);
 
-		let sumPosX = Camera.instance.transform.x - (Math.floor(Camera.instance.transform.x/this.tileSize) * this.tileSize);
-		let sumPosY = Camera.instance.transform.y - (Math.floor(Camera.instance.transform.y/this.tileSize) * this.tileSize);
+		let sumPosX = this.gameComponentCamera.transform.position.x - (Math.floor(this.gameComponentCamera.transform.position.x/this.tileSize) * this.tileSize);
+		let sumPosY = this.gameComponentCamera.transform.position.y - (Math.floor(this.gameComponentCamera.transform.position.y/this.tileSize) * this.tileSize);
 
 		for (let row = 0; row < rowLen + 1; row++) {
 			for (let col = 0; col < colLen + 1; col++) {
-				let posY = Math.floor(Camera.instance.transform.y/this.tileSize) + row;
-				let posX = Math.floor(Camera.instance.transform.x/this.tileSize) + col;
+				let posY = Math.floor(this.gameComponentCamera.transform.position.y/this.tileSize) + row;
+				let posX = Math.floor(this.gameComponentCamera.transform.position.x/this.tileSize) + col;
 
 				let imageSrc, widthSrc, heightSrc, widthDist, heightDist;
 
@@ -56,7 +61,7 @@ export class TileMapLayer extends GameComponent {
 					heightSrc = Math.floor((tileNum- 1) / (this.tileSet.sprite.image.width / this.tileSize));
 				}
 
-				GameEngine.instance.context2D.drawImage(
+				Camera.context2D.drawImage(
 					imageSrc,
 					// na imagem
 					widthSrc * this.tileSize, heightSrc * this.tileSize,
