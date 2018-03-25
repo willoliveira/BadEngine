@@ -40,14 +40,30 @@ export class Vector2 {
 		}
 	}
 
-	public fromAngle(angle: number, length?: number) {
+	public static add(v1: Vector2, v2: Vector2) {
+		return new Vector2(v1.x + v2.x, v1.y + v2.y);
+	}
+
+	public static sub(v1: Vector2, v2: Vector2) {
+		return new Vector2(v1.x - v2.x, v1.y - v2.y);
+	}
+
+	public static mult(v1: Vector2, v2: Vector2) {
+		return new Vector2(v1.x * v2.x, v1.y * v2.y);
+	}
+
+	public static div(v1: Vector2, v2: Vector2) {
+		return new Vector2(v1.x / v2.x, v1.y / v2.y);
+	}
+
+	public static fromAngle(angle: number, length?: number) {
 		if (typeof length === 'undefined') {
 			length = 1;
 		}
 		return new Vector2(length * Math.cos(angle), length * Math.sin(angle));
 	};
 
-	public random2D() {
-		return this.fromAngle(Math.random() * (Math.PI * 2));
+	public static random2D() {
+		return Vector2.fromAngle(Math.random() * (Math.PI * 2));
 	};
 }

@@ -121,7 +121,10 @@ class Motion {
 	constructor(
 		public location: Vector2,
 		public velocity: Vector2,
-		public ctx: CanvasRenderingContext2D) { }
+		public ctx: CanvasRenderingContext2D, w?: number, h?: number) {
+			if(w) this.width = w;
+			if(h) this.height = h;
+		}
 
 	update() { }
 
@@ -270,6 +273,122 @@ const ctxCar = canvasCar.getContext("2d");
 	ctxCar
 );
 
+
+/**
+ * Exemplo 1.9: Movimento 101 (velocidade e aceleração constante)
+ */
+const canvasMotionRandomVelocity = <HTMLCanvasElement> document.getElementById("motion-random-velocity");
+const ctxMotionRandomVelocity = canvasMotionRandomVelocity.getContext("2d");
+
+class MotionRandomLocation extends Motion {
+
+	acceleration: Vector2;
+	topspeed: number;
+
+	constructor(public location: Vector2, public velocity: Vector2, ctx: CanvasRenderingContext2D, w: number, h: number) {
+		super(location, velocity, ctx, w, h);
+
+		this.acceleration = new Vector2(0.001, 0.01);
+		this.topspeed = 10;
+	}
+
+	update() {
+		this.acceleration = Vector2.random2D();
+
+		this.acceleration.mult(0.5);
+
+		this.velocity.add(this.acceleration);
+		this.velocity.limit(this.topspeed);
+		this.location.add(this.velocity);
+	}
+}
+
+const motionRandomLocation = new MotionRandomLocation(
+	new Vector2(
+		Math.floor(Math.random() * canvasMotionRandomVelocity.width),
+		Math.floor(Math.random() * canvasMotionRandomVelocity.height)
+	),
+	new Vector2(0, 0),
+	ctxMotionRandomVelocity,
+	canvasMotionRandomVelocity.width,  canvasMotionRandomVelocity.height
+);
+
+/**
+ * Exemplo 1.10: Movimento 101 (velocidade e aceleração constante)
+ */
+const canvasMotionMouseDirection = <HTMLCanvasElement> document.getElementById("motion-mouse-velocity");
+const ctxMotionMouseDirection = canvasMotionMouseDirection.getContext("2d");
+
+canvasMotionMouseDirection.addEventListener('mousemove', function(evt) {
+	offeset.y = canvasMotionMouseDirection.offsetTop;
+	offeset.x = canvasMotionMouseDirection.offsetLeft;
+})
+
+class MotionMouseDirection extends Motion {
+
+	acceleration: Vector2;
+	topspeed: number;
+
+	constructor(public location: Vector2, public velocity: Vector2, ctx: CanvasRenderingContext2D, w: number, h: number) {
+		super(location, velocity, ctx, w, h);
+
+		this.location = new Vector2(Math.random() * this.width, Math.random() * this.height)
+		this.acceleration = new Vector2(0.001, 0.01);
+		this.topspeed = 10;
+	}
+
+	update() {
+		const direction = Vector2.sub(mouse, this.location);
+
+		direction.normalize();
+
+		direction.mult(.5);
+
+		this.acceleration = direction;
+
+		this.velocity.add(this.acceleration);
+		this.velocity.limit(this.topspeed);
+		this.location.add(this.velocity);
+	}
+}
+
+const motionMouseDirection = new MotionMouseDirection(
+	new Vector2(
+		Math.floor(Math.random() * canvasMotionMouseDirection.width),
+		Math.floor(Math.random() * canvasMotionMouseDirection.height)
+	),
+	new Vector2(0, 0),
+	ctxMotionMouseDirection,
+
+	canvasMotionMouseDirection.width, canvasMotionMouseDirection.height
+);
+
+/**
+ * Exemplo 1.11: Matriz de movimentadores acelerando em direção ao mouse
+ */
+const canvasMotionMouseDirections = <HTMLCanvasElement> document.getElementById("motion-mouse-mult");
+const ctxMotionMouseDirections = canvasMotionMouseDirections.getContext("2d");
+
+canvasMotionMouseDirections.addEventListener('mousemove', function(evt) {
+	offeset.y = canvasMotionMouseDirections.offsetTop;
+	offeset.x = canvasMotionMouseDirections.offsetLeft;
+});
+
+const motionMouseDirectionArr: Array<MotionMouseDirection> = [];
+for (let contDirection = 0; contDirection < 20; contDirection++){
+
+	motionMouseDirectionArr.push(new MotionMouseDirection(
+		new Vector2(
+			Math.floor(Math.random() * canvasMotionMouseDirections.width),
+			Math.floor(Math.random() * canvasMotionMouseDirections.height)
+		),
+		new Vector2(0, 0),
+		ctxMotionMouseDirections,
+
+		canvasMotionMouseDirections.width, canvasMotionMouseDirections.height
+	));
+}
+
 setInterval(() => {
 	motionVelocity.update();
 	motionVelocity.checkEdges();
@@ -282,4 +401,16 @@ setInterval(() => {
 	car.update();
 	car.checkEdges();
 	car.display();
+
+	motionRandomLocation.update();
+	motionRandomLocation.checkEdges();
+	motionRandomLocation.display();
+
+	motionMouseDirection.update();
+	motionMouseDirection.checkEdges();
+	motionMouseDirection.display();
+
+	motionMouseDirectionArr.forEach(m => { m.update() })
+	motionMouseDirectionArr.forEach(m => { m.checkEdges() })
+	motionMouseDirectionArr.forEach(m => { m.display() })
 }, 1000 / 60);
