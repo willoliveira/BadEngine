@@ -1,6 +1,6 @@
 export class Vector2 {
 
-	constructor(public x: number, public y: number) { }
+	constructor(public x: number = 0, public y: number = 0) { }
 
 	public add(v: Vector2) {
 		this.x += v.x;
