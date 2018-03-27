@@ -12,14 +12,14 @@ export class Vector2 {
 		this.y -= v.y;
 	}
 
-	public mult(m: number) {
-		this.x *= m;
-		this.y *= m;
+	public mult(num: number) {
+		this.x *= num;
+		this.y *= num;
 	}
 
-	public div(m: number) {
-		this.x /= m;
-		this.y /= m;
+	public div(num: number) {
+		this.x /= num;
+		this.y /= num;
 	}
 
 	public mag() {
@@ -48,12 +48,12 @@ export class Vector2 {
 		return new Vector2(v1.x - v2.x, v1.y - v2.y);
 	}
 
-	public static mult(v1: Vector2, v2: Vector2) {
-		return new Vector2(v1.x * v2.x, v1.y * v2.y);
+	public static mult(v1: Vector2, num: number) {
+		return new Vector2(v1.x * num, v1.y * num);
 	}
 
-	public static div(v1: Vector2, v2: Vector2) {
-		return new Vector2(v1.x / v2.x, v1.y / v2.y);
+	public static div(v1: Vector2, num: number) {
+		return new Vector2(v1.x / num, v1.y / num);
 	}
 
 	public static fromAngle(angle: number, length?: number) {
