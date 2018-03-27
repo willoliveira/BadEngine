@@ -332,7 +332,6 @@ class MotionMouseDirection extends Motion {
 	constructor(public location: Vector2, public velocity: Vector2, ctx: CanvasRenderingContext2D, w: number, h: number) {
 		super(location, velocity, ctx, w, h);
 
-		this.location = new Vector2(Math.random() * this.width, Math.random() * this.height)
 		this.acceleration = new Vector2(0.001, 0.01);
 		this.topspeed = 10;
 	}
@@ -350,6 +349,18 @@ class MotionMouseDirection extends Motion {
 		this.velocity.limit(this.topspeed);
 		this.location.add(this.velocity);
 	}
+
+	display() {
+		this.ctx.beginPath();
+		this.ctx.moveTo(50, 50);
+		this.ctx.rect(this.location.x, this.location.y, 16, 16);
+		this.ctx.stroke();
+	}
+
+	clearReact() {
+		this.ctx.clearRect(0, 0, this.width, this.height);
+	}
+
 }
 
 const motionMouseDirection = new MotionMouseDirection(
@@ -375,7 +386,7 @@ canvasMotionMouseDirections.addEventListener('mousemove', function(evt) {
 });
 
 const motionMouseDirectionArr: Array<MotionMouseDirection> = [];
-for (let contDirection = 0; contDirection < 20; contDirection++){
+for (let contDirection = 0; contDirection < 30; contDirection++){
 
 	motionMouseDirectionArr.push(new MotionMouseDirection(
 		new Vector2(
@@ -408,9 +419,11 @@ setInterval(() => {
 
 	motionMouseDirection.update();
 	motionMouseDirection.checkEdges();
+	motionMouseDirection.clearReact();
 	motionMouseDirection.display();
 
-	motionMouseDirectionArr.forEach(m => { m.update() })
-	motionMouseDirectionArr.forEach(m => { m.checkEdges() })
-	motionMouseDirectionArr.forEach(m => { m.display() })
+	motionMouseDirectionArr.forEach(m => { m.update() });
+	motionMouseDirectionArr.forEach(m => { m.checkEdges() });
+	motionMouseDirectionArr.forEach(m => { m.clearReact() });
+	motionMouseDirectionArr.forEach(m => { m.display() });
 }, 1000 / 60);
