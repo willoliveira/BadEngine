@@ -6,20 +6,21 @@
 	"scripts": {
 		"test": "karma start",
 		"dev": "cross-env NODE_ENV=development webpack --mode development",
-		"serve": "cross-env NODE_ENV=development webpack-dev-server --mode development",
+		"start": "cross-env NODE_ENV=development webpack-dev-server --mode development",
 		"build": "cross-env NODE_ENV=production webpack --mode production"
 	},
 	"author": "",
 	"license": "ISC",
 	"dependencies": {
-		"redux": "^3.7.2"
+		"@types/events": "^1.2.0",
+		"events": "^2.0.0"
 	},
 	"devDependencies": {
 		"@types/jasmine": "^2.8.6",
 		"@types/jasminewd2": "^2.0.3",
 		"cross-env": "^5.1.4",
 		"css-loader": "^0.28.11",
-		"istanbul-instrumenter-loader": "^3.0.0",
+		"istanbul-instrumenter-loader": "^3.0.1",
 		"jasmine-core": "^3.1.0",
 		"jasmine-spec-reporter": "^4.2.1",
 		"karma": "^2.0.0",
@@ -33,10 +34,10 @@
 		"sass-loader": "^6.0.7",
 		"style-loader": "^0.20.3",
 		"ts-loader": "^4.1.0",
-		"typescript": "^2.7.2",
-		"webpack": "^4.2.0",
+		"typescript": "^2.8.1",
+		"webpack": "^4.4.1",
 		"webpack-cli": "^2.0.13",
-		"webpack-dev-middleware": "^3.0.1",
+		"webpack-dev-middleware": "^3.1.0",
 		"webpack-dev-server": "^3.1.1"
 	}
 }

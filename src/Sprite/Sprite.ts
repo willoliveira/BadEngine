@@ -57,6 +57,7 @@ export class Sprite extends Component {
 
 	//TODO: Talvez tentar dar uma melhorada
 	Update() {
+		// if (!this.gameComponentCamera) return;
 		this.sprite.destRect = {
 			x: ((this.gameComponentCamera.transform.position.x * -1) + this.transform.position.x),
 			y: ((this.gameComponentCamera.transform.position.y * -1)  + this.transform.position.y),

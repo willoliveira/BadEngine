@@ -3,7 +3,6 @@
 *
 * Conforme for evoluindo a estrutura com os componentes, vou alterando aqui o padrão
 */
-
 import { Player } from "./Character/Player";
 import { MovementDirection, Direction, Position } from "./_base/interface/position.interface";
 import { Camera } from "./Camera/Camera";
@@ -19,6 +18,8 @@ import { Animation, AnimationState } from "./Animation/Animation";
 import KeyboardInput from './Events/KeyboardInput'
 import { Vector2 } from "./_base/Math/Vector2";
 import { Rect } from "./_base/model/Rect";
+
+const gameEngine: GameEngine = new GameEngine();
 
 const Resources: Array<ResourceItem> = [
 	{ name: "blankImage", url: "/assets/blank.png", type: 'image' },
@@ -80,7 +81,6 @@ let mapCollisions = [
 	[1, 1, 1, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1]
 ]
 
-let gameEngine: GameEngine;
 
 let Hierarchy: Array<GameComponent> = [];
 let components: Array<GameComponent>;
@@ -279,8 +279,11 @@ LoadResources(Resources, (files: any) => {
 	init();
 })
 
+let loopId;
+
 function init() {
-	setInterval(GameLoop, 1000 / GameEngine.FPS);
+	// gameEngine.StartFrame();
+	loopId = window.requestAnimationFrame(GameLoop);
 
 	document.getElementById("limitBorder").addEventListener("change", (event:any) => {
 		var cFollow: CameraFollow = cameraGameObject.getComponent(CameraFollow) as CameraFollow;
@@ -306,6 +309,7 @@ function GameLoop() {
 
 	components.forEach((c:GameComponent) => { c.FixedUpdate(); });
 	components.forEach((c:GameComponent) => { c.Update(); });
+	components.forEach((c:GameComponent) => { c.OnRender(); });
 
 	/**
 	 * Super provisório, só pra mostrar como será depois
@@ -315,27 +319,30 @@ function GameLoop() {
 	 * - Layer
 	 * 		-> Order
 	 */
-	components
-		.filter((c:GameComponent) => {
-			if (c instanceof Sprite) return true;
-			if (!c.getComponent) return false;
-			let sprite: Sprite = c.getComponent(Sprite) as Sprite;
-			return sprite;
-		})
-		.sort((a, b) => {
-			let aSprite, bSprite: Sprite;
+	// components
+	// 	.filter((c:GameComponent) => {
+	// 		if (c instanceof Sprite) return true;
+	// 		if (!c.getComponent) return false;
+	// 		let sprite: Sprite = c.getComponent(Sprite) as Sprite;
+	// 		return sprite;
+	// 	})
+	// 	.sort((a, b) => {
+	// 		let aSprite, bSprite: Sprite;
 
-			aSprite = a instanceof Sprite ? a : a.getComponent(Sprite) as Sprite;
-			bSprite = b instanceof Sprite ? b : b.getComponent(Sprite) as Sprite;
+	// 		aSprite = a instanceof Sprite ? a : a.getComponent(Sprite) as Sprite;
+	// 		bSprite = b instanceof Sprite ? b : b.getComponent(Sprite) as Sprite;
 
-			if (aSprite.layer > bSprite.layer) return 1
-			else if (aSprite.layer < bSprite.layer) return -1
-			else {
-				if (aSprite.orderInLayer > bSprite.orderInLayer) return 1
-				if (aSprite.orderInLayer < bSprite.orderInLayer) return -1
-			}
-		})
-		.forEach((c:GameComponent) => { c.OnRender(); });
+	// 		if (aSprite.layer > bSprite.layer) return 1
+	// 		else if (aSprite.layer < bSprite.layer) return -1
+	// 		else {
+	// 			if (aSprite.orderInLayer > bSprite.orderInLayer) return 1
+	// 			if (aSprite.orderInLayer < bSprite.orderInLayer) return -1
+	// 		}
+	// 	})
+	// 	.forEach((c:GameComponent) => { c.OnRender(); });
+
+
+	loopId = window.requestAnimationFrame(GameLoop);
 }
 
 
