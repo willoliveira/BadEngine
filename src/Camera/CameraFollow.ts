@@ -19,7 +19,7 @@ export class CameraFollow extends Component {
 	}
 
 	Awake() {
-		this.transform = this.parent.getComponent(Transform) as Transform;
+		this.transform = this.parent.getComponent('Transform') as Transform;
 		this.camera = GameEngine.Camera;
 	}
 

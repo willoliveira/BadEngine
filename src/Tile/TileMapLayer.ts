@@ -26,7 +26,7 @@ export class TileMapLayer extends GameComponent {
 	Awake() {
 		this.gameComponentCamera = GameEngine.Camera.parent as GameComponent
 
-		this.tileSet = this.getComponent(Sprite) as Sprite;
+		this.tileSet = this.getComponent('Sprite') as Sprite;
 	}
 
 	/**

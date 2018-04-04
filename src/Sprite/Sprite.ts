@@ -29,6 +29,8 @@ export class Sprite extends Component {
 	constructor(image?: any) {
 		super();
 
+		this.Awake = this.Awake.bind(this);
+
 		this.init(image);
 	}
 
@@ -51,12 +53,16 @@ export class Sprite extends Component {
 	}
 
 	Awake() {
-		this.transform = this.parent.getComponent(Transform) as Transform;
+		this.transform = this.parent.getComponent('Transform') as Transform;
 		this.gameComponentCamera = GameEngine.Camera.parent as GameComponent;
+
+		console.log(this)
 	}
 
 	//TODO: Talvez tentar dar uma melhorada
 	Update() {
+		console.log(this)
+
 		// if (!this.gameComponentCamera) return;
 		this.sprite.destRect = {
 			x: ((this.gameComponentCamera.transform.position.x * -1) + this.transform.position.x),

@@ -274,7 +274,7 @@ LoadResources(Resources, (files: any) => {
 		return before;
 	}, []);
 
-	components.forEach((c:GameComponent) => { c.Awake(); });	// Testar isso também
+	components.forEach((c:GameComponent) => { c.Awake.call(c); });	// Testar isso também
 
 	init();
 })
@@ -282,11 +282,11 @@ LoadResources(Resources, (files: any) => {
 let loopId;
 
 function init() {
-	// gameEngine.StartFrame();
-	loopId = window.requestAnimationFrame(GameLoop);
+	gameEngine.StartFrame();
+	// loopId = window.requestAnimationFrame(GameLoop);
 
 	document.getElementById("limitBorder").addEventListener("change", (event:any) => {
-		var cFollow: CameraFollow = cameraGameObject.getComponent(CameraFollow) as CameraFollow;
+		var cFollow: CameraFollow = cameraGameObject.getComponent('CameraFollow') as CameraFollow;
 		cFollow.limitBorder = event.target.checked ? { width: mapLayers[0][0].length * 64, height: mapLayers[0].length * 64 } : null;
 	});
 }
@@ -348,8 +348,8 @@ function GameLoop() {
 
 function onKeyDown(evt: any) {
 	dir = { x: Direction.Idle, y: Direction.Idle };
-	const playerAnimation = player.getComponent(Animation) as Animation;
-	const playerSprite = player.getComponent(Sprite) as Sprite;
+	const playerAnimation = player.getComponent('Animation') as Animation;
+	const playerSprite = player.getComponent('Sprite') as Sprite;
 	//left
 	if (evt.keyCode === 37) {
 		// if (playerAnimation) {
@@ -384,8 +384,8 @@ function onKeyDown(evt: any) {
 }
 
 function onKeyUp() {
-	const playerAnimation = player.getComponent(Animation) as Animation;
-	const playerSprite = player.getComponent(Sprite) as Sprite;
+	const playerAnimation = player.getComponent('Animation') as Animation;
+	const playerSprite = player.getComponent('Sprite') as Sprite;
 
 	if (dir.x === 0) {
 		if (playerAnimation.currentState.name === "run-down") {

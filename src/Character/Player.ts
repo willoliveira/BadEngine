@@ -24,9 +24,9 @@ export class Player extends GameComponent {
 
 	Awake() {
 		this.gameComponentCamera = GameEngine.Camera.parent as GameComponent
-		this.cameraFollow = this.gameComponentCamera.getComponent(CameraFollow) as CameraFollow;
-		this.spriteComponent = this.getComponent(Sprite) as Sprite;
-		this.animation = this.getComponent(Animation) as Animation;
+		this.cameraFollow = this.gameComponentCamera.getComponent('CameraFollow') as CameraFollow;
+		this.spriteComponent = this.getComponent('Sprite') as Sprite;
+		this.animation = this.getComponent('Animation') as Animation;
 	}
 
 	FixedUpdate() {

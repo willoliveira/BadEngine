@@ -7,43 +7,39 @@ import { Sprite } from '../Sprite/Sprite';
 export class Component {
 
 	public parent: GameComponent;
-	public event: EventEmitter;
 
 	constructor() {
-		this.event = GameEngine.Event;
-		this.event.on('TICK', this.handlerEvents.bind(this));
-		this.event.on('LIFECYCLE', this.handlerEvents.bind(this));
+		GameEngine.Event.on('TICK', this.handlerEvents.bind(this));
+		GameEngine.Event.on('LIFECYCLE', this.handlerEvents.bind(this));
 	}
 
 
-	private hasSprite() {
-		if (this instanceof Sprite) return true;
-		return !!this.parent.getComponent(Sprite);
+	private hasSprite(): boolean {
+		return this.constructor.name === "Sprite" || !!(this.parent && this.parent.getComponent('Sprite'))
 	}
 
 	private handlerEvents(event: any) {
 		if (event.type === 'TICK') {
-			this.event.emit('LIFECYCLE', { type: 'LIFECYCLE', name: 'FixedUpdate' });
-			this.event.emit('LIFECYCLE', { type: 'LIFECYCLE', name: 'Update' });
-
+			// console.log('hasSprite')
+			 GameEngine.Event.emit('LIFECYCLE', { type: 'LIFECYCLE', name: 'FixedUpdate' });
+			 GameEngine.Event.emit('LIFECYCLE', { type: 'LIFECYCLE', name: 'Update' });
 
 			if (this.hasSprite()) {
-				this.event.emit('LIFECYCLE', { type: 'LIFECYCLE', name: 'OnRender' });
+				 GameEngine.Event.emit('LIFECYCLE', { type: 'LIFECYCLE', name: 'OnRender' });
 			}
 
 		} else {
-			console.log(event.name);
 			switch(event.name) {
 				case 'Update':
-					this.Update();
+					this.Update.call(this);
 					break;
 
 				case 'FixedUpdate':
-					this.FixedUpdate();
+					this.FixedUpdate.call(this);
 					break;
 
 				case 'OnRender':
-					this.OnRender();
+					this.OnRender.call(this);
 					break;
 			}
 		}

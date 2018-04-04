@@ -32,8 +32,10 @@ export class TileMap extends GameComponent {
 			tileMapLayerSprite.layer = layer;
 			tileMapLayerSprite.orderInLayer = 0;
 
-			tileMapLayer.addComponent(tileMapLayerSprite);
 			tileMapLayer.Awake();
+			tileMapLayer.addComponent(tileMapLayerSprite);
+
+			tileMapLayerSprite.Awake();
 
 			this.addComponent(tileMapLayer);
 		}
