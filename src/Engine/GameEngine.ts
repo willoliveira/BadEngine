@@ -15,7 +15,7 @@ export class GameEngine {
 	private event: GameEvents;
 
 	constructor() {
-		GameEngine.Event = this.event =new GameEvents();
+		GameEngine.Event = this.event = new GameEvents();
 
 		this.event.setMaxListeners(1000);
 	}
@@ -25,24 +25,18 @@ export class GameEngine {
 	}
 
 	private loop() {
-		this.event.emit('TICK', { type: 'TICK' });
+		GameEngine.Event.dispatch({ type: 'TICK' });
 		requestAnimationFrame(this.loop.bind(this));
 	}
 }
 
 class GameEvents extends EventEmitter {
 
-	private queuedEvents: Array<any> = [];
+	private queuedActions: Array<any> = [];
 
-	public dispatch(action: any) {
-		if (action && action.type !== 'TICK') {
-			this.queuedEvents.push(action);
-		} else {
-			if (this.queuedEvents.length) {
-				let action = this.queuedEvents.shift();
-			}
-
+	public dispatch(action: any | string) {
+		if (action) {
+			this.emit(action.type, ...action)
 		}
-		this.emit(action.type, ...action);
 	}
 }

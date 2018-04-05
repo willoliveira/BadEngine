@@ -87,6 +87,7 @@ let components: Array<GameComponent>;
 
 /// CAMERA
 const cameraGameObject: GameComponent = new GameComponent(new Transform());
+cameraGameObject.name = "Camera";
 let camera: Camera = new Camera("stage");
 camera.viewportRect = { x: 0, y: 0, width: 12 * tileSize, height: 12 * tileSize };
 cameraGameObject.addComponent(camera);
@@ -105,12 +106,13 @@ LoadResources(Resources, (files: any) => {
 
 	// TODO:  MUDAR PARA CHILDREN
 	let tileMap: TileMap = new TileMap(files.tileSet.file, 64, mapLayers, mapCollisions, files.blankImage.file);
+	tileMap.name = "Tile map";
 	tileMap.Awake();
-
 
 	// Player
 	player = new Player(new Transform(), 1);
 	player.transform.position = new Vector2(tileSize, tileSize);
+	player.name = "Player";
 	let spritePlayer: Sprite = new Sprite(files.blankImage.file);
 	spritePlayer.layer = 0;
 	spritePlayer.orderInLayer = 1;
@@ -223,6 +225,7 @@ LoadResources(Resources, (files: any) => {
 	//NPC
 	const npc = new GameComponent(new Transform());
 	npc.transform.position = new Vector2(256, 256);
+	npc.name = "Non player character";
 
 	const npcSpriteSheet: Sprite = new Sprite(files.megaman.file);
 	npcSpriteSheet.layer = 0;
@@ -282,8 +285,7 @@ LoadResources(Resources, (files: any) => {
 let loopId;
 
 function init() {
-	gameEngine.StartFrame();
-	// loopId = window.requestAnimationFrame(GameLoop);
+	loopId = window.requestAnimationFrame(GameLoop);
 
 	document.getElementById("limitBorder").addEventListener("change", (event:any) => {
 		var cFollow: CameraFollow = cameraGameObject.getComponent('CameraFollow') as CameraFollow;
@@ -309,7 +311,6 @@ function GameLoop() {
 
 	components.forEach((c:GameComponent) => { c.FixedUpdate(); });
 	components.forEach((c:GameComponent) => { c.Update(); });
-	components.forEach((c:GameComponent) => { c.OnRender(); });
 
 	/**
 	 * Super provisório, só pra mostrar como será depois
@@ -319,27 +320,27 @@ function GameLoop() {
 	 * - Layer
 	 * 		-> Order
 	 */
-	// components
-	// 	.filter((c:GameComponent) => {
-	// 		if (c instanceof Sprite) return true;
-	// 		if (!c.getComponent) return false;
-	// 		let sprite: Sprite = c.getComponent(Sprite) as Sprite;
-	// 		return sprite;
-	// 	})
-	// 	.sort((a, b) => {
-	// 		let aSprite, bSprite: Sprite;
+	components
+		.filter((c:GameComponent) => {
+			if (c.constructor.name === 'Sprite') return true;
+			if (!c.getComponent) return false;
+			let sprite: Sprite = c.getComponent('Sprite') as Sprite;
+			return sprite;
+		})
+		.sort((a, b) => {
+			let aSprite: any, bSprite: any;
 
-	// 		aSprite = a instanceof Sprite ? a : a.getComponent(Sprite) as Sprite;
-	// 		bSprite = b instanceof Sprite ? b : b.getComponent(Sprite) as Sprite;
+			aSprite = a.constructor.name === 'Sprite' ? a : a.getComponent('Sprite') as Sprite;
+			bSprite = b.constructor.name === 'Sprite' ? b : b.getComponent('Sprite') as Sprite;
 
-	// 		if (aSprite.layer > bSprite.layer) return 1
-	// 		else if (aSprite.layer < bSprite.layer) return -1
-	// 		else {
-	// 			if (aSprite.orderInLayer > bSprite.orderInLayer) return 1
-	// 			if (aSprite.orderInLayer < bSprite.orderInLayer) return -1
-	// 		}
-	// 	})
-	// 	.forEach((c:GameComponent) => { c.OnRender(); });
+			if (aSprite.layer > bSprite.layer) return 1
+			else if (aSprite.layer < bSprite.layer) return -1
+			else {
+				if (aSprite.orderInLayer > bSprite.orderInLayer) return 1
+				if (aSprite.orderInLayer < bSprite.orderInLayer) return -1
+			}
+		})
+		.forEach((c:GameComponent) => { c.OnRender(); });
 
 
 	loopId = window.requestAnimationFrame(GameLoop);
@@ -352,32 +353,20 @@ function onKeyDown(evt: any) {
 	const playerSprite = player.getComponent('Sprite') as Sprite;
 	//left
 	if (evt.keyCode === 37) {
-		// if (playerAnimation) {
-		// 	playerAnimation.setState("run-left");
-		// }
 		dir.x = -1;
 		playerSprite.flip.x = true;
 	}
 	//right
 	if (evt.keyCode === 39) {
-		// if (playerAnimation) {
-		// 	playerAnimation.setState("run-right");
-		// }
 		dir.x = 1;
 		playerSprite.flip.x = false;
 	}
 	//down
 	if (evt.keyCode === 40) {
-		// if (playerAnimation) {
-		// 	playerAnimation.setState("run-down");
-		// }
 		dir.y = 1;
 	}
 	//up
 	if (evt.keyCode === 38) {
-		// if (playerAnimation) {
-		// 	playerAnimation.setState("run-up");
-		// }
 		dir.y = -1;
 	}
 	// onMoveTo(dir);

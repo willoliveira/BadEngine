@@ -3,7 +3,10 @@ import { Transform } from "./Transform";
 
 export class GameComponent extends Component {
 
-	private _components: Array<GameComponent|Component> = [ ]; // TODO: Tentar assim por enquanto
+	public name: string = 'GameComponent';
+	public id: string; // TODO: Gera um hash automático depois talvez
+
+	private _components: Array<Component> = [ ]; // TODO: Tentar assim por enquanto
 
 	constructor(public transform: Transform) {
 		super();
