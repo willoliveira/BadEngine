@@ -11,6 +11,7 @@ export class GameEngine {
 	public static FPS: number = 60;
 	public static Camera: Camera;
 	public static Event: GameEvents;
+	public static components: Array<Component> = [];
 
 	private event: GameEvents;
 

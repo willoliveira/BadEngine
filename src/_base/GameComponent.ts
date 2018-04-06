@@ -1,13 +1,13 @@
 import { Component } from "./Component";
 import { Transform } from "./Transform";
+import { GameEngine } from "../Engine/GameEngine";
 
 export class GameComponent extends Component {
 
-	public _name: string = 'Game component';
-	public id: string; // TODO: Gera um hash automático depois talvez
+	public _name: string = 'Game component'; // TODO: Talvez levar esse nome pro nivel do Component
 
-	private _components: Array<Component> = [ ]; // TODO: Tentar assim por enquanto
-	private _children: Array<GameComponent> = [ ];
+	private _components: Array<string> = [ ];
+	private _children: Array<string> = [ ];
 
 	constructor(public transform: Transform) {
 		super();
@@ -26,39 +26,42 @@ export class GameComponent extends Component {
 	}
 
 	get components() {
-		return this._components;
+		return this._components.map((componentId: string) => GameEngine.components.find(c => c.id === componentId))
 	}
 
 	get children() {
-		return this._children;
+		return this._children.map((componentId: string) => GameEngine.components.find(c => c.id === componentId));
 	}
 
-
-	public addComponent(component: GameComponent|Component): Component {
+	public addComponent(component: Component): Component {
 		component.parent = this;
-		this._components.push(component);
+		this._components.push(component.id);
 		return component;
 	}
 
 	public getComponent(type: any): Component {
-		return this._components.find((c:any) => c.constructor.name === type);
+		return this.components.find((c: Component) => c.constructor.name === type);
 	}
 
 	public getComponents(type: any): Array<Component> {
-		return this._components.filter((c:any) => c.constructor.name === type);
+		return this.components.filter((c: Component) => c.constructor.name === type);
 	}
 
 	public addChildren(gameComponent: GameComponent): GameComponent {
 		gameComponent.parent = this;
-		this._children.push(gameComponent);
+		this._children.push(gameComponent.id);
 		return gameComponent;
 	}
 
 	public getChild(childName: string): GameComponent {
-		return this._children.find((gc: GameComponent) => gc.name === childName);
+		return this._children
+			.map((componentId: string) => GameEngine.components.find(c => c.id === componentId) as GameComponent)
+			.find((gc: GameComponent) => gc.name === childName);
 	}
 
  	public getChildrens(childName: string): Array<GameComponent> {
-		return this._children.filter((gc: GameComponent) => gc.name === childName);
+		return this._children
+			.map((gameComponentId: string) => GameEngine.components.find(c => c.id === gameComponentId) as GameComponent)
+			.filter((gc: GameComponent) => gc.name === childName);
 	}
 }
