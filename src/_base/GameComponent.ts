@@ -30,7 +30,7 @@ export class GameComponent extends Component {
 	}
 
 	get children() {
-		return this._children.map((componentId: string) => GameEngine.components.find(c => c.id === componentId));
+		return this._children.map((componentId: string) => GameEngine.components.find(c => c.id === componentId) as GameComponent);
 	}
 
 	public addComponent(component: Component): Component {
@@ -54,14 +54,10 @@ export class GameComponent extends Component {
 	}
 
 	public getChild(childName: string): GameComponent {
-		return this._children
-			.map((componentId: string) => GameEngine.components.find(c => c.id === componentId) as GameComponent)
-			.find((gc: GameComponent) => gc.name === childName);
+		return this.children.find((gc: GameComponent) => gc.name === childName);
 	}
 
  	public getChildrens(childName: string): Array<GameComponent> {
-		return this._children
-			.map((gameComponentId: string) => GameEngine.components.find(c => c.id === gameComponentId) as GameComponent)
-			.filter((gc: GameComponent) => gc.name === childName);
+		return this.children.filter((gc: GameComponent) => gc.name === childName);
 	}
 }
