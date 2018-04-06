@@ -7,7 +7,7 @@ import { GameComponent } from '../_base/GameComponent';
 //pensar em um nome
 interface SpriteProperty {
 	backgroundColor: string; //não usado ainda
-	canvas: HTMLCanvasElement,
+	canvas: HTMLCanvasElement, //não usado ainda
 	sourceRect: { x: number, y: number, width: number, height: number },
 	destRect: { x: number, y: number, width: number, height: number },
 	image?: any

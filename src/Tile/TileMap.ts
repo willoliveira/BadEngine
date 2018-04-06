@@ -11,33 +11,7 @@ import { TileMapLayer } from "./TileMapLayer";
  */
 export class TileMap extends GameComponent {
 
-	public transform: Transform;
-	private camera: Camera;
-
-	constructor(
-		public tileSet: any,
-		public tileSize: number,
-		public mapLayers: Array<Array<Array<number>>>,
-		public mapCollisions: Array<Array<number>>,
-		public blankImage: any // TODO: ficou ruim isso, depois rever
-	) {
+	constructor() {
 		super(new Transform());
-	}
-
-	Awake() {
-		for (let layer = 0; layer < this.mapLayers.length; layer++) {
-			// TODO: Talvez, fazer um esquema de filho no Hierarchy aqui, e não adicionar como componente
-			let tileMapLayer: TileMapLayer = new TileMapLayer(this.tileSize, this.mapLayers[layer], this.blankImage);
-			let tileMapLayerSprite: Sprite = new Sprite(this.tileSet);
-			tileMapLayerSprite.layer = layer;
-			tileMapLayerSprite.orderInLayer = 0;
-
-			tileMapLayer.Awake();
-			tileMapLayer.addComponent(tileMapLayerSprite);
-
-			tileMapLayerSprite.Awake();
-
-			this.addComponent(tileMapLayer);
-		}
 	}
 }

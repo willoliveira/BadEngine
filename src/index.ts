@@ -18,6 +18,7 @@ import { Animation, AnimationState } from "./Animation/Animation";
 import KeyboardInput from './Events/KeyboardInput'
 import { Vector2 } from "./_base/Math/Vector2";
 import { Rect } from "./_base/model/Rect";
+import { TileMapLayer } from "./Tile/TileMapLayer";
 
 const gameEngine: GameEngine = new GameEngine();
 
@@ -100,14 +101,21 @@ let dir: MovementDirection = { x: Direction.Idle, y: Direction.Idle };
 
 //Carrega os resources do game
 LoadResources(Resources, (files: any) => {
-	let image = new Image();
-	let imageBlank = new Image();
-	imageBlank.src = "/assets/blank.png"
 
-	// TODO:  MUDAR PARA CHILDREN
-	let tileMap: TileMap = new TileMap(files.tileSet.file, 64, mapLayers, mapCollisions, files.blankImage.file);
+	let tileMap: TileMap = new TileMap();
 	tileMap.name = "Tile map";
-	tileMap.Awake();
+
+	for (let layer = 0; layer < mapLayers.length; layer++) {
+		let tileMapLayer: TileMapLayer = new TileMapLayer(64, mapLayers[layer], files.blankImage.file);
+		let tileMapLayerSprite: Sprite = new Sprite(files.tileSet.file);
+
+		tileMapLayerSprite.layer = layer;
+		tileMapLayerSprite.orderInLayer = 0;
+
+		tileMapLayer.name = 'Tile map layer';
+		tileMapLayer.addComponent(tileMapLayerSprite);
+		tileMap.addChildren(tileMapLayer);
+	}
 
 	// Player
 	player = new Player(new Transform(), 1);
@@ -219,7 +227,6 @@ LoadResources(Resources, (files: any) => {
 
 	player.addComponent(spritePlayer);
 	player.addComponent(animationPlayer);
-	// player.Awake();
 	// Player
 
 	//NPC
@@ -264,7 +271,6 @@ LoadResources(Resources, (files: any) => {
 
 	//Adicionando o target na CameraFollow
 	cameraGameObject.addComponent(new CameraFollow(player));
-	// cameraGameObject.Awake();
 
 	//Hierarchy: seguindo a linha do unity, depois posso mudar o nome
 	Hierarchy.push(cameraGameObject, tileMap, player, npc);
@@ -274,10 +280,13 @@ LoadResources(Resources, (files: any) => {
 		if (current.components && current.components.length) {
 			before = before.concat(current.components);
 		}
+		if (current.children && current.children.length) {
+			before = before.concat(current.children);
+		}
 		return before;
 	}, []);
 
-	components.forEach((c:GameComponent) => { c.Awake.call(c); });	// Testar isso também
+	components.forEach((c:GameComponent) => { c.Awake(); });
 
 	init();
 })
