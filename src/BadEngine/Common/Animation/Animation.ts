@@ -1,8 +1,13 @@
-import { Component } from "../_base/Component";
-import { GameComponent } from "../_base/GameComponent";
+import { Component } from "../../Base/Component/Component";
 import { Sprite } from "../Sprite/Sprite";
-import { GameEngine } from "../Engine/GameEngine";
-import { Resources } from "../_base/Resources";
+import { Resources } from "../Ressource/Resources";
+import { GameComponent } from "../../Base/GameCmponent/GameComponent";
+
+// import { Component } from "../_base/Component";
+// import { GameComponent } from "../_base/GameComponent";
+// import { Sprite } from "../Sprite/Sprite";
+// import { GameEngine } from "../Engine/GameEngine";
+// import { Resources } from "../_base/Resources";
 
 export interface AnimationState {
 	default: boolean,

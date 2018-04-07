@@ -1,4 +1,4 @@
-import { Vector2 } from "../../../../src/_base/Math/Vector2";
+import { Vector2 } from "../../../../src/BadEngine/Base/Math/components/Vector2/Vector2";
 
 const mouse: Vector2 = new Vector2(0, 0);
 const offeset: Vector2 = new Vector2(0, 0);

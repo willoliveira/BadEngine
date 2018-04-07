@@ -1,8 +1,11 @@
-import { Transform } from './Transform';
-import { GameComponent } from './GameComponent';
-import { GameEngine } from '../Engine/GameEngine';
-import { EventEmitter } from 'events';
-import { Sprite } from '../Sprite/Sprite';
+import { GameEngine } from "../GameEngine";
+import { GameComponent } from "../GameCmponent/GameComponent";
+
+// import { Transform } from './Transform';
+// import { GameComponent } from './GameComponent';
+// import { GameEngine } from '../Engine/GameEngine';
+// import { EventEmitter } from 'events';
+// import { Sprite } from '../Sprite/Sprite';
 
 let _counterComponents: number = 0;
 

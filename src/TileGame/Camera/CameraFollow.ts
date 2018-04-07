@@ -1,8 +1,14 @@
-import { Component } from "../_base/Component";
-import { GameComponent } from "../_base/GameComponent";
-import { Transform } from "../_base/Transform";
-import { Camera } from "./Camera";
-import { GameEngine } from "../Engine/GameEngine";
+import { Component } from "../../BadEngine/Base/Component/Component";
+import { Transform } from "../../BadEngine/Base/Transform/Transform";
+import { Camera } from "../../BadEngine/Common/Camera/Camera";
+import { GameComponent } from "../../BadEngine/Base/GameCmponent/GameComponent";
+import { GameEngine } from "../../BadEngine/Base/GameEngine";
+
+// import { Component } from "../_base/Component";
+// import { GameComponent } from "../_base/GameComponent";
+// import { Transform } from "../_base/Transform";
+// import { Camera } from "./Camera";
+// import { GameEngine } from "../Engine/GameEngine";
 
 export class CameraFollow extends Component {
 

@@ -1,11 +1,14 @@
-import { Player } from "../Character/Player";
-import { Transform } from "../_base/Transform";
-import { Rect } from "../_base/model/Rect";
-import { Component } from "../_base/Component";
+import { Component } from "../../Base/Component/Component";
+import { Rect } from "../../Base/Math/models/Rect";
+
+// import { Player } from "../Character/Player";
+// import { Transform } from "../_base/Transform";
+// import { Rect } from "../_base/model/Rect";
+// import { Component } from "../_base/Component";
 
 export class Camera extends Component {
 
-	private _viewportRect: Rect
+	private _viewportRect: Rect;
 
 	public static canvas: HTMLCanvasElement;
 	public static context2D: CanvasRenderingContext2D;

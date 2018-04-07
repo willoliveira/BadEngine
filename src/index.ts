@@ -1,24 +1,23 @@
+
 /**
 * Essa inicialização não ficara assim, depois pensar no start
 *
 * Conforme for evoluindo a estrutura com os componentes, vou alterando aqui o padrão
 */
-import { Player } from "./Character/Player";
-import { MovementDirection, Direction, Position } from "./_base/interface/position.interface";
-import { Camera } from "./Camera/Camera";
-import { Transform } from "./_base/Transform";
-import { GameComponent } from "./_base/GameComponent";
-import { CameraFollow } from "./Camera/CameraFollow";
-import { Component } from "./_base/Component";
-import { GameEngine } from "./Engine/GameEngine";
-import { Sprite } from "./Sprite/Sprite";
-import { TileMap } from "./Tile/TileMap";
-import { ResourceItem, LoadResources } from "./_base/Resources";
-import { Animation, AnimationState } from "./Animation/Animation";
-import KeyboardInput from './Events/KeyboardInput'
-import { Vector2 } from "./_base/Math/Vector2";
-import { Rect } from "./_base/model/Rect";
-import { TileMapLayer } from "./Tile/TileMapLayer";
+import { GameEngine } from "./BadEngine/Base/GameEngine";
+import { ResourceItem, LoadResources } from "./BadEngine/Common/Ressource/Resources";
+import { GameComponent } from "./BadEngine/Base/GameCmponent/GameComponent";
+import { Transform } from "./BadEngine/Base/Transform/Transform";
+import { Camera } from "./BadEngine/Common/Camera/Camera";
+import { Player } from "./TileGame/Character/Player";
+import { MovementDirection, Direction } from "./BadEngine/Base/models/position.interface";
+import { TileMap } from "./TileGame/Tile/TileMap";
+import { TileMapLayer } from "./BadEngine/Common/Tile/TileMapLayer";
+import { Sprite } from "./BadEngine/Common/Sprite/Sprite";
+
+import { AnimationState, Animation } from "./BadEngine/Common/Animation/Animation";
+import { CameraFollow } from "./TileGame/Camera/CameraFollow";
+import { Vector2 } from "./BadEngine/Base/Math/components/Vector2/Vector2";
 
 const gameEngine: GameEngine = new GameEngine();
 
@@ -83,27 +82,31 @@ let mapCollisions = [
 ]
 
 
-let Hierarchy: Array<GameComponent> = [];
-let components: Array<GameComponent>;
+const Hierarchy: Array<GameComponent> = [];
+let components: Array<GameComponent> = [];
 
 /// CAMERA
 const cameraGameObject: GameComponent = new GameComponent(new Transform());
 cameraGameObject.name = "Camera";
-let camera: Camera = new Camera("stage");
+const camera: Camera = new Camera("stage");
 camera.viewportRect = { x: 0, y: 0, width: 12 * tileSize, height: 12 * tileSize };
 cameraGameObject.addComponent(camera);
 
 GameEngine.Camera = camera;
 
-let player: Player;
-let velocity = 5;
-let dir: MovementDirection = { x: Direction.Idle, y: Direction.Idle };
+const player: GameComponent = new GameComponent(new Transform());
+player.transform.position = new Vector2(tileSize, tileSize);
+player.name = "Player";
+
+const dir: MovementDirection = { x: Direction.Idle, y: Direction.Idle };
 
 //Carrega os resources do game
 LoadResources(Resources, (files: any) => {
 
-	let tileMap: TileMap = new TileMap();
-	tileMap.name = "Tile map";
+	//TileMap
+	const tileMapGameObject: GameComponent = new GameComponent(new Transform());
+	tileMapGameObject.name = "Tile map";
+	const tileMap: TileMap = new TileMap();
 
 	for (let layer = 0; layer < mapLayers.length; layer++) {
 		let tileMapLayer: TileMapLayer = new TileMapLayer(64, mapLayers[layer], files.blankImage.file);
@@ -114,14 +117,14 @@ LoadResources(Resources, (files: any) => {
 
 		tileMapLayer.name = 'Tile map layer';
 		tileMapLayer.addComponent(tileMapLayerSprite);
-		tileMap.addChildren(tileMapLayer);
+		tileMapGameObject.addChildren(tileMapLayer);
 	}
+	tileMapGameObject.addComponent(tileMap);
+	//TileMap
 
 	// Player
-	player = new Player(new Transform(), 1);
-	player.transform.position = new Vector2(tileSize, tileSize);
-	player.name = "Player";
-	let spritePlayer: Sprite = new Sprite(files.blankImage.file);
+	const playerScript = new Player();
+	const spritePlayer: Sprite = new Sprite(files.blankImage.file);
 	spritePlayer.layer = 0;
 	spritePlayer.orderInLayer = 1;
 
@@ -227,6 +230,7 @@ LoadResources(Resources, (files: any) => {
 
 	player.addComponent(spritePlayer);
 	player.addComponent(animationPlayer);
+	player.addComponent(playerScript);
 	// Player
 
 	//NPC
@@ -273,9 +277,9 @@ LoadResources(Resources, (files: any) => {
 	cameraGameObject.addComponent(new CameraFollow(player));
 
 	//Hierarchy: seguindo a linha do unity, depois posso mudar o nome
-	Hierarchy.push(cameraGameObject, tileMap, player, npc);
+	Hierarchy.push(cameraGameObject, tileMapGameObject, player, npc);
 
-	components = Hierarchy.reduce((before, current:GameComponent) => {
+	components = Hierarchy.reduce((before, current: GameComponent) => {
 		before.push(current);
 		if (current.components && current.components.length) {
 			before = before.concat(current.components);
@@ -287,6 +291,8 @@ LoadResources(Resources, (files: any) => {
 	}, []);
 
 	components.forEach((c:GameComponent) => { c.Awake(); });
+
+	console.log(Hierarchy)
 
 	init();
 })
@@ -357,7 +363,8 @@ function GameLoop() {
 
 
 function onKeyDown(evt: any) {
-	dir = { x: Direction.Idle, y: Direction.Idle };
+	dir.x = Direction.Idle;
+	dir.y = Direction.Idle;
 	const playerAnimation = player.getComponent('Animation') as Animation;
 	const playerSprite = player.getComponent('Sprite') as Sprite;
 	//left
@@ -400,7 +407,8 @@ function onKeyUp() {
 		}
 	}
 
-	dir  = { x: Direction.Idle, y: Direction.Idle };
+	dir.x = Direction.Idle;
+	dir.y = Direction.Idle;
 }
 
 

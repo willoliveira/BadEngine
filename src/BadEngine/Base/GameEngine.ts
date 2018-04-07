@@ -1,7 +1,9 @@
-import { Component } from "../_base/Component";
-import { Camera } from "../Camera/Camera";
+// import { Component } from "../_base/Component";
+// import { Camera } from "../Camera/Camera";
 
 import { EventEmitter } from 'events';
+import { Camera } from '../Common/Camera/Camera';
+import { Component } from './Component/Component';
 
 /**
 * TODO: super provisório, depois investir um tempo pra chegar em um lance legal aqui

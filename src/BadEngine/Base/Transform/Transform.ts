@@ -1,5 +1,8 @@
-import { Component } from "./Component";
-import { Vector2 } from "./Math/Vector2";
+import { Component } from "../Component/Component";
+import { Vector2 } from "../Math/components/Vector2/Vector2";
+
+// import { Component } from "./Component";
+// import { Vector2 } from "./Math/Vector2";
 
 export class Transform extends Component{
 
