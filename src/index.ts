@@ -292,8 +292,6 @@ LoadResources(Resources, (files: any) => {
 
 	components.forEach((c:GameComponent) => { c.Awake(); });
 
-	console.log(Hierarchy)
-
 	init();
 })
 
