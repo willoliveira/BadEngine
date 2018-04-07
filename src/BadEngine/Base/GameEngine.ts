@@ -1,6 +1,3 @@
-// import { Component } from "../_base/Component";
-// import { Camera } from "../Camera/Camera";
-
 import { EventEmitter } from 'events';
 import { Camera } from '../Common/Camera/Camera';
 import { Component } from './Component/Component';

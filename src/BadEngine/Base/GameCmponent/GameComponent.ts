@@ -2,10 +2,6 @@ import { Component } from "../Component/Component";
 import { Transform } from "../Transform/Transform";
 import { GameEngine } from "../GameEngine";
 
-// import { Component } from "./Component";
-// import { Transform } from "./Transform";
-// import { GameEngine } from "../Engine/GameEngine";
-
 export class GameComponent extends Component {
 
 	public _name: string = 'Game component'; // TODO: Talvez levar esse nome pro nivel do Component

@@ -4,12 +4,6 @@ import { GameComponent } from "../../Base/GameCmponent/GameComponent";
 import { GameEngine } from "../../Base/GameEngine";
 import { Camera } from "../Camera/Camera";
 
-// import { Component } from '../_base/Component';
-// import { GameEngine } from '../Engine/GameEngine';
-// import { Camera } from '../Camera/Camera';
-// import { Transform } from '../_base/Transform';
-// import { GameComponent } from '../_base/GameComponent';
-
 //pensar em um nome
 interface SpriteProperty {
 	backgroundColor: string; //não usado ainda

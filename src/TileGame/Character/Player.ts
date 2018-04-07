@@ -9,17 +9,6 @@ import { KeyboardInput } from "../../BadEngine/Common/Events/KeyboardInput";
 import { Animation } from "../../BadEngine/Common/Animation/Animation";
 import { Component } from "../../BadEngine/Base/Component/Component";
 
-// import { Position, Direction } from "../_base/interface/position.interface";
-// import { Transform } from "../_base/Transform";
-// import { GameComponent } from "../_base/GameComponent";
-// import { Sprite } from "../Sprite/Sprite";
-// import { Camera } from "../Camera/Camera";
-// import { CameraFollow } from "../Camera/CameraFollow";
-// import { GameEngine } from "../Engine/GameEngine";
-// import { Animation, AnimationState } from "../Animation/Animation";
-// import { KeyboardInput } from "../Events/KeyboardInput";
-// import { Vector2 } from "../_base/Math/Vector2";
-
 export class Player extends Component {
 
 	private velocity: Vector2 = new Vector2(5, 5);

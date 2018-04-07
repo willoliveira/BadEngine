@@ -4,13 +4,6 @@ import { Transform } from "../../Base/Transform/Transform";
 import { GameEngine } from "../../Base/GameEngine";
 import { Camera } from "../Camera/Camera";
 
-// import { Component } from "../_base/Component";
-// import { GameComponent } from "../_base/GameComponent";
-// import { Transform } from "../_base/Transform";
-// import { Sprite } from "../Sprite/Sprite";
-// import { Camera } from "../Camera/Camera";
-// import { GameEngine } from "../Engine/GameEngine";
-
 /**
 * Seria um unico mapa de Tile
 */
