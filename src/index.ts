@@ -13,7 +13,7 @@ import { Player } from "./TileGame/Character/Player";
 import { MovementDirection, Direction } from "./BadEngine/Base/models/position.interface";
 import { TileMap } from "./TileGame/Tile/TileMap";
 import { TileMapLayer } from "./BadEngine/Common/Tile/TileMapLayer";
-import { Sprite } from "./BadEngine/Common/Sprite/Sprite";
+import { Sprite, DrawMode } from "./BadEngine/Common/Sprite/Sprite";
 
 import { AnimationState, Animation } from "./BadEngine/Common/Animation/Animation";
 import { CameraFollow } from "./TileGame/Camera/CameraFollow";
@@ -109,12 +109,12 @@ LoadResources(Resources, (files: any) => {
 	const tileMap: TileMap = new TileMap();
 
 	for (let layer = 0; layer < mapLayers.length; layer++) {
-		let tileMapLayer: TileMapLayer = new TileMapLayer(64, mapLayers[layer], files.blankImage.file);
-		let tileMapLayerSprite: Sprite = new Sprite(files.tileSet.file);
-
+		const tileMapLayerSprite: Sprite = new Sprite(files.tileSet.file);
 		tileMapLayerSprite.layer = layer;
 		tileMapLayerSprite.orderInLayer = 0;
+		tileMapLayerSprite.drawMode = DrawMode.TILED;
 
+		const tileMapLayer: TileMapLayer = new TileMapLayer(64, mapLayers[layer], files.blankImage.file);
 		tileMapLayer.name = 'Tile map layer';
 		tileMapLayer.addComponent(tileMapLayerSprite);
 		tileMapGameObject.addChildren(tileMapLayer);
@@ -279,21 +279,23 @@ LoadResources(Resources, (files: any) => {
 	//Hierarchy: seguindo a linha do unity, depois posso mudar o nome
 	Hierarchy.push(cameraGameObject, tileMapGameObject, player, npc);
 
-	components = Hierarchy.reduce((before, current: GameComponent) => {
-		before.push(current);
-		if (current.components && current.components.length) {
-			before = before.concat(current.components);
-		}
-		if (current.children && current.children.length) {
-			before = before.concat(current.children);
-		}
-		return before;
-	}, []);
+	components = Hierarchy.reduce(AllComponents, []);
 
-	components.forEach((c:GameComponent) => { c.Awake(); });
+	GameEngine.components.forEach((c:GameComponent) => { c.Awake(); });
 
 	init();
-})
+});
+
+function AllComponents(before: Array<any>, current: GameComponent) {
+	before.push(current);
+	if (current.components && current.components.length) {
+		before = before.concat(current.components);
+	}
+	if (current.children && current.children.length) {
+		before = before.concat(current.children.reduce(AllComponents, []));
+	}
+	return before;
+}
 
 let loopId;
 
@@ -334,23 +336,16 @@ function GameLoop() {
 	 * 		-> Order
 	 */
 	components
-		.filter((c:GameComponent) => {
+		.filter((c: GameComponent) => {
 			if (c.constructor.name === 'Sprite') return true;
-			if (!c.getComponent) return false;
-			let sprite: Sprite = c.getComponent('Sprite') as Sprite;
-			return sprite;
+			return false;
 		})
-		.sort((a, b) => {
-			let aSprite: any, bSprite: any;
-
-			aSprite = a.constructor.name === 'Sprite' ? a : a.getComponent('Sprite') as Sprite;
-			bSprite = b.constructor.name === 'Sprite' ? b : b.getComponent('Sprite') as Sprite;
-
-			if (aSprite.layer > bSprite.layer) return 1
-			else if (aSprite.layer < bSprite.layer) return -1
+		.sort((a: any, b: any) => {
+			if (a.layer > b.layer) return 1;
+			else if (a.layer < b.layer) return -1;
 			else {
-				if (aSprite.orderInLayer > bSprite.orderInLayer) return 1
-				if (aSprite.orderInLayer < bSprite.orderInLayer) return -1
+				if (a.orderInLayer > b.orderInLayer) return 1;
+				if (a.orderInLayer < b.orderInLayer) return -1;
 			}
 		})
 		.forEach((c:GameComponent) => { c.OnRender(); });

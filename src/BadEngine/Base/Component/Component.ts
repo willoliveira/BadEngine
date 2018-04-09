@@ -8,8 +8,7 @@ export class Component {
 	private _id: string;
 
 	constructor() {
-		this._id = `Component_${_counterComponents}`;
-		_counterComponents += 1;
+		this._id = `Component_${_counterComponents++}`;
 
 		GameEngine.components.push(this);
 	}
@@ -27,7 +26,7 @@ export class Component {
 	}
 
 	private hasSprite(): boolean {
-		return this.constructor.name === "Sprite" || !!(this.parent && this.parent.getComponent('Sprite'))
+		return this.constructor.name === "Sprite" || !!(this.parent && this.parent.getComponent('Sprite'));
 	}
 
 	public Awake() { }

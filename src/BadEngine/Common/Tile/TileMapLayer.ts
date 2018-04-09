@@ -10,8 +10,9 @@ import { Camera } from "../Camera/Camera";
 export class TileMapLayer extends GameComponent {
 
 	private gameComponentCamera: GameComponent;
+	private ctx: CanvasRenderingContext2D;
 
-	tileSet: Sprite;
+	spriteComponent: Sprite;
 
 	constructor(
 		public tileSize: number,
@@ -25,14 +26,17 @@ export class TileMapLayer extends GameComponent {
 	Awake() {
 		this.gameComponentCamera = GameEngine.Camera.parent as GameComponent
 
-		this.tileSet = this.getComponent('Sprite') as Sprite;
+		this.spriteComponent = this.getComponent('Sprite') as Sprite;
+		this.spriteComponent.sprite.canvas.width = Camera.canvas.width;
+		this.spriteComponent.sprite.canvas.height = Camera.canvas.height;
+		this.ctx = this.spriteComponent.sprite.canvas.getContext('2d');
 	}
 
 	/**
 	 * Trocar esse lance pra outra coisa...
 	 * Fazer só o sprite fazer render...
 	 */
-	OnRender() {
+	Update() {
 		let rowLen = Math.floor(GameEngine.Camera.viewportRect.height/64);
 		let colLen = Math.floor(GameEngine.Camera.viewportRect.width/64);
 
@@ -55,12 +59,13 @@ export class TileMapLayer extends GameComponent {
 					heightSrc = 0;
 				} else {
 					let tileNum = this.mapLayers[posY][posX];
-					imageSrc = this.tileSet.sprite.image;
-					widthSrc = ((tileNum - 1) % (this.tileSet.sprite.image.width / this.tileSize));
-					heightSrc = Math.floor((tileNum- 1) / (this.tileSet.sprite.image.width / this.tileSize));
+					if (tileNum === 0) continue;
+					imageSrc = this.spriteComponent.sprite.image;
+					widthSrc = ((tileNum - 1) % (this.spriteComponent.sprite.image.width / this.tileSize));
+					heightSrc = Math.floor((tileNum- 1) / (this.spriteComponent.sprite.image.width / this.tileSize));
 				}
 
-				Camera.context2D.drawImage(
+				this.ctx.drawImage(
 					imageSrc,
 					// na imagem
 					widthSrc * this.tileSize, heightSrc * this.tileSize,

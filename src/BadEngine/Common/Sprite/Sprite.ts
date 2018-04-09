@@ -5,12 +5,17 @@ import { GameEngine } from "../../Base/GameEngine";
 import { Camera } from "../Camera/Camera";
 
 //pensar em um nome
-interface SpriteProperty {
+export interface SpriteProperty {
 	backgroundColor: string; //não usado ainda
 	canvas: HTMLCanvasElement, //não usado ainda
 	sourceRect: { x: number, y: number, width: number, height: number },
 	destRect: { x: number, y: number, width: number, height: number },
 	image?: any
+}
+
+export enum DrawMode {
+	SIMPLE,
+	TILED
 }
 
 export class Sprite extends Component {
@@ -25,6 +30,7 @@ export class Sprite extends Component {
 	public layer: number;
 	public orderInLayer: number;
 	public sprite: SpriteProperty;
+	public drawMode: DrawMode = DrawMode.SIMPLE;
 
 	constructor(image?: any) {
 		super();
@@ -57,9 +63,8 @@ export class Sprite extends Component {
 		this.gameComponentCamera = GameEngine.Camera.parent as GameComponent;
 	}
 
-	//TODO: Talvez tentar dar uma melhorada
+	//TODO: Tentar dar uma melhorada
 	Update() {
-		// if (!this.gameComponentCamera) return;
 		this.sprite.destRect = {
 			x: ((this.gameComponentCamera.transform.position.x * -1) + this.transform.position.x),
 			y: ((this.gameComponentCamera.transform.position.y * -1)  + this.transform.position.y),
@@ -72,14 +77,18 @@ export class Sprite extends Component {
 		let srcRect = this.sprite.sourceRect;
 		let destRect = this.sprite.destRect;
 
-		Camera.context2D.drawImage(
-			this.sprite.image,
+		if (this.drawMode === DrawMode.SIMPLE) {
+			Camera.context2D.drawImage(
+				this.sprite.image,
 
-			srcRect.x, srcRect.y,
-			srcRect.width, srcRect.height,
+				srcRect.x, srcRect.y,
+				srcRect.width, srcRect.height,
 
-			destRect.x, destRect.y,
-			destRect.width, destRect.height
-		);
+				destRect.x, destRect.y,
+				destRect.width, destRect.height
+			);
+		} else if (this.drawMode === DrawMode.TILED) {
+			Camera.context2D.drawImage(this.sprite.canvas, 0, 0);
+		}
 	}
 }
