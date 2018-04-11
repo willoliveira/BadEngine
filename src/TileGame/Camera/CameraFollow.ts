@@ -23,7 +23,7 @@ export class CameraFollow extends Component {
 		this.camera = GameEngine.Camera;
 	}
 
-	FixedUpdate() {
+	Update() {
 		this.Follow();
 	}
 

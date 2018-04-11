@@ -276,134 +276,20 @@ LoadResources(Resources, (files: any) => {
 	//Adicionando o target na CameraFollow
 	cameraGameObject.addComponent(new CameraFollow(player));
 
-	//Hierarchy: seguindo a linha do unity, depois posso mudar o nome
-	Hierarchy.push(cameraGameObject, tileMapGameObject, player, npc);
-
-	components = Hierarchy.reduce(AllComponents, []);
-
-	GameEngine.components.forEach((c:GameComponent) => { c.Awake(); });
+	gameEngine.addToHierarchy(cameraGameObject, tileMapGameObject, player, npc);
 
 	init();
 });
 
-function AllComponents(before: Array<any>, current: GameComponent) {
-	before.push(current);
-	if (current.components && current.components.length) {
-		before = before.concat(current.components);
-	}
-	if (current.children && current.children.length) {
-		before = before.concat(current.children.reduce(AllComponents, []));
-	}
-	return before;
-}
+
 
 let loopId;
 
 function init() {
-	loopId = window.requestAnimationFrame(GameLoop);
+	GameEngine.Event.StartFrame();
 
 	document.getElementById("limitBorder").addEventListener("change", (event:any) => {
 		var cFollow: CameraFollow = cameraGameObject.getComponent('CameraFollow') as CameraFollow;
 		cFollow.limitBorder = event.target.checked ? { width: mapLayers[0][0].length * 64, height: mapLayers[0].length * 64 } : null;
 	});
 }
-
-function GameLoop() {
-
-	// const gamePads = navigator.getGamepads()
-	// if (gamePads.length) {
-	// 	/**
-	// 	 * Axes Left Horizontal (negativo esquerda, positivo direita),
-	// 	 * Axes Left Vertical (negativo esquerda, positivo direita),
-	// 	 * Axes Right Horizontal (negativo esquerda, positivo direita),
-	// 	 * Axes Right Vertical (negativo esquerda, positivo direita),
-	// 	 * axes [0, 0, 0, 0]
-	// 	 */
-	// 	dir.x = gamePads[0].axes[0];
-	// 	dir.y = gamePads[0].axes[1];
-	// }
-	// onMoveTo(dir);
-
-	components.forEach((c:GameComponent) => { c.FixedUpdate(); });
-	components.forEach((c:GameComponent) => { c.Update(); });
-
-	/**
-	 * Super provisório, só pra mostrar como será depois
-	 * O render ele será só de elementos que possuem Sprite e/ou Interface
-	 * A renderização será nessa ordem
-	 *
-	 * - Layer
-	 * 		-> Order
-	 */
-	components
-		.filter((c: GameComponent) => {
-			if (c.constructor.name === 'Sprite') return true;
-			return false;
-		})
-		.sort((a: any, b: any) => {
-			if (a.layer > b.layer) return 1;
-			else if (a.layer < b.layer) return -1;
-			else {
-				if (a.orderInLayer > b.orderInLayer) return 1;
-				if (a.orderInLayer < b.orderInLayer) return -1;
-			}
-		})
-		.forEach((c:GameComponent) => { c.OnRender(); });
-
-
-	loopId = window.requestAnimationFrame(GameLoop);
-}
-
-
-function onKeyDown(evt: any) {
-	dir.x = Direction.Idle;
-	dir.y = Direction.Idle;
-	const playerAnimation = player.getComponent('Animation') as Animation;
-	const playerSprite = player.getComponent('Sprite') as Sprite;
-	//left
-	if (evt.keyCode === 37) {
-		dir.x = -1;
-		playerSprite.flip.x = true;
-	}
-	//right
-	if (evt.keyCode === 39) {
-		dir.x = 1;
-		playerSprite.flip.x = false;
-	}
-	//down
-	if (evt.keyCode === 40) {
-		dir.y = 1;
-	}
-	//up
-	if (evt.keyCode === 38) {
-		dir.y = -1;
-	}
-	// onMoveTo(dir);
-}
-
-function onKeyUp() {
-	const playerAnimation = player.getComponent('Animation') as Animation;
-	const playerSprite = player.getComponent('Sprite') as Sprite;
-
-	if (dir.x === 0) {
-		if (playerAnimation.currentState.name === "run-down") {
-			playerAnimation.setState("idle-down");
-		} else if (playerAnimation.currentState.name === "run-up") {
-			playerAnimation.setState("idle-up");
-		}
-	}
-	else if (dir.y === 0) {
-		if (playerAnimation.currentState.name === "run-right") {
-			playerAnimation.setState("idle-right");
-		} else if (playerAnimation.currentState.name === "run-left") {
-			playerAnimation.setState("idle-left");
-		}
-	}
-
-	dir.x = Direction.Idle;
-	dir.y = Direction.Idle;
-}
-
-
-window.addEventListener("keydown", onKeyDown);
-window.addEventListener("keyup", onKeyUp);

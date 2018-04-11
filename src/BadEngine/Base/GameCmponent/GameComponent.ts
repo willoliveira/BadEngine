@@ -25,14 +25,15 @@ export class GameComponent extends Component {
 		}
 	}
 
-	get components() {
-		return this._components.map((componentId: string) => GameEngine.components.find(c => c.id === componentId))
+	get components(): Array<Component> {
+		return this._components.map((componentId: string) => GameEngine.getComponent(componentId))
 	}
 
-	get children() {
-		return this._children.map((componentId: string) => GameEngine.components.find(c => c.id === componentId) as GameComponent);
+	get children(): Array<GameComponent> {
+		return this._children.map((componentId: string) => GameEngine.getComponent(componentId) as GameComponent);
 	}
 
+	// TODO: Quando adicionar um component, e o parent já estiver no stage, executar Awake
 	public addComponent(component: Component): Component {
 		component.parent = this;
 		this._components.push(component.id);
@@ -47,6 +48,7 @@ export class GameComponent extends Component {
 		return this.components.filter((c: Component) => c.constructor.name === type);
 	}
 
+	// TODO: Quando adicionar um component, e o parent já estiver no stage, executar Awake
 	public addChildren(gameComponent: GameComponent): GameComponent {
 		gameComponent.parent = this;
 		this._children.push(gameComponent.id);

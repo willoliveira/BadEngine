@@ -29,6 +29,7 @@ export class TileMapLayer extends GameComponent {
 		this.spriteComponent = this.getComponent('Sprite') as Sprite;
 		this.spriteComponent.sprite.canvas.width = Camera.canvas.width;
 		this.spriteComponent.sprite.canvas.height = Camera.canvas.height;
+
 		this.ctx = this.spriteComponent.sprite.canvas.getContext('2d');
 	}
 
@@ -40,13 +41,13 @@ export class TileMapLayer extends GameComponent {
 		let rowLen = Math.floor(GameEngine.Camera.viewportRect.height/64);
 		let colLen = Math.floor(GameEngine.Camera.viewportRect.width/64);
 
-		let sumPosX = this.gameComponentCamera.transform.position.x - (Math.floor(this.gameComponentCamera.transform.position.x/this.tileSize) * this.tileSize);
-		let sumPosY = this.gameComponentCamera.transform.position.y - (Math.floor(this.gameComponentCamera.transform.position.y/this.tileSize) * this.tileSize);
+		let sumPosX = this.gameComponentCamera.transform.position.x - (Math.floor(this.gameComponentCamera.transform.position.x / this.tileSize) * this.tileSize);
+		let sumPosY = this.gameComponentCamera.transform.position.y - (Math.floor(this.gameComponentCamera.transform.position.y / this.tileSize) * this.tileSize);
 
 		for (let row = 0; row < rowLen + 1; row++) {
 			for (let col = 0; col < colLen + 1; col++) {
-				let posY = Math.floor(this.gameComponentCamera.transform.position.y/this.tileSize) + row;
-				let posX = Math.floor(this.gameComponentCamera.transform.position.x/this.tileSize) + col;
+				let posY = Math.floor(this.gameComponentCamera.transform.position.y / this.tileSize) + row;
+				let posX = Math.floor(this.gameComponentCamera.transform.position.x / this.tileSize) + col;
 
 				let imageSrc, widthSrc, heightSrc, widthDist, heightDist;
 

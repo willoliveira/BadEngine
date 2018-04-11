@@ -10,11 +10,24 @@ export class Component {
 	constructor() {
 		this._id = `Component_${_counterComponents++}`;
 
-		GameEngine.components.push(this);
+		GameEngine.addComponent(this);
+	}
+
+	//TODO: Avaliar esses eventos
+	public registerEvents() {
+		GameEngine.Event.on("AWAKE", this.Awake.bind(this));
+		GameEngine.Event.on("ON_ENABLE", this.OnEnable.bind(this));
+		GameEngine.Event.on("START", this.Start.bind(this));
+
+		GameEngine.Event.on("UPDATE", this.Update.bind(this));
+		// GameEngine.Event.on("ON_RENDER", this.OnRender.bind(this));
+
+		GameEngine.Event.on("ON_DISABLE", this.OnDisable.bind(this));
+		GameEngine.Event.on("ON_DESTROY", this.OnDestroy.bind(this));
 	}
 
 	get parent(): GameComponent {
-		return GameEngine.components.find((gc: GameComponent) => gc._id === this._parent) as GameComponent;
+		return GameEngine.getComponent(this._parent) as GameComponent;
 	}
 
 	set parent(value: GameComponent) {
@@ -25,18 +38,12 @@ export class Component {
 		return this._id;
 	}
 
-	private hasSprite(): boolean {
-		return this.constructor.name === "Sprite" || !!(this.parent && this.parent.getComponent('Sprite'));
-	}
-
 	public Awake() { }
 
 	public OnEnable() { }
 
 	public Start() { }
 
-
-	public FixedUpdate() { }
 
 	public Update() { }
 

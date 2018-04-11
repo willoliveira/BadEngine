@@ -89,6 +89,7 @@ export class Sprite extends Component {
 			);
 		} else if (this.drawMode === DrawMode.TILED) {
 			Camera.context2D.drawImage(this.sprite.canvas, 0, 0);
+			this.sprite.canvas.getContext('2d').clearRect(0, 0, this.sprite.canvas.width, this.sprite.canvas.height);
 		}
 	}
 }

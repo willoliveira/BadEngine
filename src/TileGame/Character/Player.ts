@@ -11,6 +11,7 @@ import { Component } from "../../BadEngine/Base/Component/Component";
 
 export class Player extends Component {
 
+	private dir = { x: Direction.Idle, y: Direction.Idle };
 	private velocity: Vector2 = new Vector2(5, 5);
 
 	private spriteComponent: Sprite;
@@ -24,43 +25,52 @@ export class Player extends Component {
 		this.cameraFollow = this.gameComponentCamera.getComponent('CameraFollow') as CameraFollow;
 		this.spriteComponent = this.parent.getComponent('Sprite') as Sprite;
 		this.animation = this.parent.getComponent('Animation') as Animation;
+
+		window.addEventListener("keyup", this.onKeyUp.bind(this));
 	}
 
-	FixedUpdate() {
-		const dir = { x: Direction.Idle, y: Direction.Idle };
+	// TODO: Provisório
+	private onKeyUp() {
+		if (this.dir.x === 0) {
+			if (this.animation.currentState.name === "run-down") {
+				this.animation.setState("idle-down");
+			} else if (this.animation.currentState.name === "run-up") {
+				this.animation.setState("idle-up");
+			}
+		}
+		else if (this.dir.y === 0) {
+			if (this.animation.currentState.name === "run-right") {
+				this.animation.setState("idle-right");
+			} else if (this.animation.currentState.name === "run-left") {
+				this.animation.setState("idle-left");
+			}
+		}
+
+		this.dir = { x: Direction.Idle, y: Direction.Idle };
+	}
+
+	Update() {
+		this.dir = { x: Direction.Idle, y: Direction.Idle };
 
 		if (KeyboardInput.GetKeyDown("ArrowLeft")) {
 			this.animation.setState("run-left");
-			dir.x = -1;
+			this.dir.x = -1;
 		}
 		else if (KeyboardInput.GetKeyDown("ArrowRight")) {
 			this.animation.setState("run-right");
-			dir.x = 1;
+			this.dir.x = 1;
 		}
 
 		if (KeyboardInput.GetKeyDown("ArrowDown")) {
 			this.animation.setState("run-down");
-			dir.y = 1;
+			this.dir.y = 1;
 		}
 		else if (KeyboardInput.GetKeyDown("ArrowUp")) {
 			this.animation.setState("run-up");
-			dir.y = -1;
+			this.dir.y = -1;
 		}
 
-		// if (KeyboardInput.GetKeyUp("ArrowDown")) {
-		// 	this.animation.setState("idle-down");
-		// } else if (KeyboardInput.GetKeyUp("ArrowUp")) {
-		// 	this.animation.setState("idle-up");
-		// }
-
-		// if (KeyboardInput.GetKeyUp("ArrowRight")) {
-		// 	this.animation.setState("idle-right");
-		// }
-		// else if (KeyboardInput.GetKeyUp("ArrowLeft")) {
-		// 	this.animation.setState("idle-left");
-		// }
-
-		this.parent.transform.position.x += dir.x * this.velocity.x;
-		this.parent.transform.position.y += dir.y * this.velocity.y;
+		this.parent.transform.position.x += this.dir.x * this.velocity.x;
+		this.parent.transform.position.y += this.dir.y * this.velocity.y;
 	}
 }
