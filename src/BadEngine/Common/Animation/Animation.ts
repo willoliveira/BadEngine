@@ -59,6 +59,11 @@ export class Animation extends Component {
 
 	setAnimationFrame() {
 		this.spriteComponent.sprite.sourceRect = this.currentState.frames[this.currentFrame].rect;
+
+		// TODO: remover isso, e controlar o tamanho de outra forma, com o scale do Transform é uma possibilidade
+		// this.spriteComponent.sprite.destRect.width = this.spriteComponent.sprite.sourceRect.width;
+		// this.spriteComponent.sprite.destRect.height = this.spriteComponent.sprite.sourceRect.height;
+
 		this.spriteComponent.sprite.image = Resources[this.currentState.frames[this.currentFrame].image].file;
 	}
 

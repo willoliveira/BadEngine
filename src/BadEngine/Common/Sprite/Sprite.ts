@@ -65,12 +65,11 @@ export class Sprite extends Component {
 
 	//TODO: Tentar dar uma melhorada
 	Update() {
-		this.sprite.destRect = {
-			x: ((this.gameComponentCamera.transform.position.x * -1) + this.transform.position.x),
-			y: ((this.gameComponentCamera.transform.position.y * -1)  + this.transform.position.y),
-			width: 64,
-			height: 64
-		}
+		this.sprite.destRect.x = ((this.gameComponentCamera.transform.position.x * -1) + this.transform.position.x);
+		this.sprite.destRect.y = ((this.gameComponentCamera.transform.position.y * -1)  + this.transform.position.y);
+		//TODO: remover isso, e controlar o tamanho de outra forma, com o scale do Transform é uma possibilidade
+		this.sprite.destRect.width = 64;
+		this.sprite.destRect.height = 64;
 	}
 
 	OnRender() {
