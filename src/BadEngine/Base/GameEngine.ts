@@ -96,6 +96,8 @@ class GameEvents extends EventEmitter {
 
 		this._sprites.forEach((sprite: Sprite) => sprite.OnRender());
 
+		// console.log(GameEngine.getComponents())
+
 		requestAnimationFrame(this.loop.bind(this));
 	}
 

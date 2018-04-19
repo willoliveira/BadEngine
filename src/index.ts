@@ -18,6 +18,8 @@ import { Sprite, DrawMode } from "./BadEngine/Common/Sprite/Sprite";
 import { AnimationState, Animation } from "./BadEngine/Common/Animation/Animation";
 import { CameraFollow } from "./TileGame/Camera/CameraFollow";
 import { Vector2 } from "./BadEngine/Base/Math/components/Vector2/Vector2";
+import { Box2D } from "./BadEngine/Common/Box2D/Box2D";
+import { Rigidbody2D } from "./BadEngine/Common/Rigidbody2D/Rigidbody2D";
 
 const gameEngine: GameEngine = new GameEngine();
 
@@ -128,8 +130,14 @@ LoadResources(Resources, (files: any) => {
 	spritePlayer.layer = 0;
 	spritePlayer.orderInLayer = 1;
 
-	let animationPlayer: Animation = new Animation();
-	let states: Array<AnimationState> = [
+	const box2DPlayer: Box2D = new Box2D();
+	box2DPlayer.size.x = 64;
+	box2DPlayer.size.y = 64;
+
+	const rigidbody2DPlayer: Rigidbody2D = new Rigidbody2D();
+
+	const animationPlayer: Animation = new Animation();
+	const states: Array<AnimationState> = [
 		{
 			default: true,
 			name: "idle-down",
@@ -231,6 +239,8 @@ LoadResources(Resources, (files: any) => {
 	player.addComponent(spritePlayer);
 	player.addComponent(animationPlayer);
 	player.addComponent(playerScript);
+	player.addComponent(box2DPlayer);
+	player.addComponent(rigidbody2DPlayer);
 	// Player
 
 	//NPC
@@ -241,6 +251,12 @@ LoadResources(Resources, (files: any) => {
 	const npcSpriteSheet: Sprite = new Sprite(files.megaman.file);
 	npcSpriteSheet.layer = 0;
 	npcSpriteSheet.orderInLayer = 2;
+
+	const box2DNPC: Box2D = new Box2D();
+	box2DNPC.size.x = 64;
+	box2DNPC.size.y = 64;
+
+	const rigidbody2DNPC: Rigidbody2D = new Rigidbody2D();
 
 	let npcAnimation: Animation = new Animation();
 	const aStatesMegaman: Array<AnimationState> = [
@@ -271,6 +287,8 @@ LoadResources(Resources, (files: any) => {
 
 	npc.addComponent(npcSpriteSheet);
 	npc.addComponent(npcAnimation);
+	npc.addComponent(box2DNPC);
+	npc.addComponent(rigidbody2DNPC);
 	//NPC
 
 	//Adicionando o target na CameraFollow

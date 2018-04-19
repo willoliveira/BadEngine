@@ -3,6 +3,7 @@ import { Transform } from "../../Base/Transform/Transform";
 import { GameComponent } from "../../Base/GameCmponent/GameComponent";
 import { GameEngine } from "../../Base/GameEngine";
 import { Camera } from "../Camera/Camera";
+import { Box2D } from "../Box2D/Box2D";
 
 //pensar em um nome
 export interface SpriteProperty {
@@ -20,8 +21,9 @@ export enum DrawMode {
 
 export class Sprite extends Component {
 
-	transform: any;
-	gameComponentCamera: any;
+	transform: Transform;
+	gameComponentCamera: GameComponent;
+	box2D: Box2D;
 	// Implementar ainda
 	public flip: { x: boolean, y: boolean } = {
 		x: false,
@@ -61,6 +63,7 @@ export class Sprite extends Component {
 	Awake() {
 		this.transform = this.parent.getComponent('Transform') as Transform;
 		this.gameComponentCamera = GameEngine.Camera.parent as GameComponent;
+		this.box2D = this.parent.getComponent('Box2D') as Box2D;
 	}
 
 	//TODO: Tentar dar uma melhorada
@@ -89,6 +92,16 @@ export class Sprite extends Component {
 		} else if (this.drawMode === DrawMode.TILED) {
 			Camera.context2D.drawImage(this.sprite.canvas, 0, 0);
 			this.sprite.canvas.getContext('2d').clearRect(0, 0, this.sprite.canvas.width, this.sprite.canvas.height);
+		}
+
+		if (this.box2D) {
+			Camera.context2D.strokeStyle = '#00ff1f';
+			Camera.context2D.strokeRect(
+				destRect.x + this.box2D.offset.x,
+				destRect.y + this.box2D.offset.y,
+				this.box2D.size.x,
+				this.box2D.size.y
+			);
 		}
 	}
 }

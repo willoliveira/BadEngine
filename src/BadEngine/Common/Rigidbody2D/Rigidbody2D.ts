@@ -8,9 +8,12 @@ export interface PhysicMaterial {
 
 export class Rigidbody2D extends Component {
 
-	public material: PhysicMaterial;
+	public material: PhysicMaterial = {
+		friction: 1,
+		bouciness: 1
+	};
 	public bodyType: 'Dynamic' | 'Kinematic';
-	public mass: number;
+	public mass: number = 1;
 
 	public addForce(force: Vector2) {
 		return Vector2.div(force, this.mass);

@@ -22,8 +22,29 @@ export class Vector2 {
 		this.y /= num;
 	}
 
+	public copy(v: Vector2) {
+		this.x = v.x;
+		this.y = v.y;
+	}
+
+	public perp() {
+		let x = this.x;
+		this.x = this.y;
+		this.y = -x;
+	}
+
+	public reverse() {
+		this.x = -this.x;
+		this.y = -this.y;
+	}
+
+	public scale(x: number, y?: number) {
+		this.x *= x;
+		this.y *= y || x;
+	}
+
 	public mag() {
-		return Math.sqrt(this.x * this.x + this.y * this.y);
+		return Math.sqrt(this.x ** 2 + this.y ** 2);
 	}
 
 	public normalize() {
@@ -39,6 +60,8 @@ export class Vector2 {
 			this.mult(max);
 		}
 	}
+
+
 
 	public static add(v1: Vector2, v2: Vector2) {
 		return new Vector2(v1.x + v2.x, v1.y + v2.y);
