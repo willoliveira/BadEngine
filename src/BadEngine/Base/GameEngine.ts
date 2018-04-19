@@ -3,6 +3,8 @@ import { Camera } from '../Common/Camera/Camera';
 import { Component } from './Component/Component';
 import { Sprite } from '../Common/Sprite/Sprite';
 import { GameComponent } from './GameCmponent/GameComponent';
+import { Box2D } from '../Common/Box2D/Box2D';
+import { Transform } from './Transform/Transform';
 
 
 const sprites: Array<string> = [];
@@ -35,7 +37,12 @@ export class GameEngine {
 		return GameEngine._components[componentId];
 	}
 
-	public static getComponents(): Array<Component> {
+	public static getComponents(type?: string): Array<Component> {
+		if (type) {
+			return Object.keys(GameEngine._components)
+				.map((componentId) => GameEngine._components[componentId])
+				.filter(comp => comp.constructor.name === type);
+		}
 		return Object.keys(GameEngine._components).map((componentId) => GameEngine._components[componentId]);
 	}
 
@@ -72,6 +79,7 @@ class GameEvents extends EventEmitter {
 	// TODO: Fazer ainda
 	private queuedActions: Array<any> = [];
 	private _sprites: Array<Sprite> = [ ];
+	private _box2D: Array<Box2D> = [ ];
 
 	constructor(public gameEngineInstance: GameEngine) {
 		super();
@@ -84,7 +92,19 @@ class GameEvents extends EventEmitter {
 		if (!this.gameEngineInstance.isRunning()) {
 			this.gameEngineInstance.Run();
 
-			this._sprites = GameEngine.getSprites().sort(filterByOrderRender);
+			this._sprites = GameEngine.getComponents("Sprite").sort(filterByOrderRender) as Array<Sprite>;
+			this._box2D = GameEngine.getComponents("Box2D").sort(filterByOrderRender) as Array<Box2D>;
+
+			{
+				const box1: Box2D = this._box2D[0];
+				const box1Transform: Transform = this._box2D[0].parent.getComponent("Transform") as Transform;
+
+				const box2: Box2D = this._box2D[1];
+				const box2Transform: Transform = this._box2D[1].parent.getComponent("Transform") as Transform;
+
+				console.log(box2Transform.position.x - box1Transform.position.x - box2.size.x / 2 - box1.size.x / 2);
+			}
+
 
 			this.dispatch({ type: "AWAKE" });
 			requestAnimationFrame(this.loop.bind(this));

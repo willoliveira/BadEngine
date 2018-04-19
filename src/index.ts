@@ -97,7 +97,7 @@ cameraGameObject.addComponent(camera);
 GameEngine.Camera = camera;
 
 const player: GameComponent = new GameComponent(new Transform());
-player.transform.position = new Vector2(tileSize, tileSize);
+player.transform.position = new Vector2(64, 64);
 player.name = "Player";
 
 const dir: MovementDirection = { x: Direction.Idle, y: Direction.Idle };
@@ -245,7 +245,7 @@ LoadResources(Resources, (files: any) => {
 
 	//NPC
 	const npc = new GameComponent(new Transform());
-	npc.transform.position = new Vector2(256, 256);
+	npc.transform.position = new Vector2(256, 64);
 	npc.name = "Non player character";
 
 	const npcSpriteSheet: Sprite = new Sprite(files.megaman.file);
@@ -306,7 +306,7 @@ let loopId;
 function init() {
 	GameEngine.Event.StartFrame();
 
-	document.getElementById("limitBorder").addEventListener("change", (event:any) => {
+	(<HTMLElement> document.getElementById("limitBorder")).addEventListener("change", (event:any) => {
 		var cFollow: CameraFollow = cameraGameObject.getComponent('CameraFollow') as CameraFollow;
 		cFollow.limitBorder = event.target.checked ? { width: mapLayers[0][0].length * 64, height: mapLayers[0].length * 64 } : null;
 	});

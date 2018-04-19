@@ -61,6 +61,9 @@ export class Vector2 {
 		}
 	}
 
+	public dot(v: Vector2) {
+		return this.x * v.x + this.y * v.y;
+	}
 
 
 	public static add(v1: Vector2, v2: Vector2) {
